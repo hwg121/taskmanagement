@@ -1,0 +1,76 @@
+.app {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.main-content {
+  padding-top: 64px; /* Height of navbar */
+}
+
+.task-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.task-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.add-task-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.add-task-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+}
+
+.not-found {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.not-found h2 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.not-found p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .task-container {
+    padding: 1rem;
+  }
+  
+  .task-header {
+    justify-content: center;
+  }
+
+  .not-found {
+    padding: 2rem 1rem;
+  }
+
+  .not-found h2 {
+    font-size: 1.5rem;
+  }
+}

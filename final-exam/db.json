@@ -1,0 +1,503 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "email": "admin@gmail.com",
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "lastLogin": "2025-08-14T15:53:25.230Z",
+      "ip": "192.168.1.166"
+    },
+    {
+      "id": 2,
+      "username": "hng121",
+      "password": "123123",
+      "email": "nguyenhung12105@gmail.com",
+      "createdAt": "2024-01-15T10:05:00.000Z",
+      "lastLogin": "2025-08-14T15:52:16.449Z",
+      "ip": "192.168.1.191"
+    },
+    {
+      "id": 3,
+      "username": "user1",
+      "password": "user123",
+      "email": "user1@example.com",
+      "createdAt": "2024-01-15T10:10:00.000Z",
+      "lastLogin": "2025-08-12T18:20:00.000Z",
+      "ip": "192.168.1.102"
+    },
+    {
+      "id": 4,
+      "username": "user2",
+      "password": "user123",
+      "email": "user2@example.com",
+      "createdAt": "2024-01-15T10:15:00.000Z",
+      "lastLogin": "2025-08-12T18:31:50.410Z",
+      "ip": "192.168.1.72"
+    },
+    {
+      "id": 5,
+      "username": "user3",
+      "password": "user123",
+      "email": "user3@example.com",
+      "createdAt": "2024-01-15T10:20:00.000Z",
+      "lastLogin": "2025-08-12T18:18:00.000Z",
+      "ip": "192.168.1.104"
+    },
+    {
+      "id": 6,
+      "username": "user4",
+      "password": "user123",
+      "email": "user4@example.com",
+      "createdAt": "2024-01-15T10:25:00.000Z",
+      "lastLogin": "2025-08-12T18:17:00.000Z",
+      "ip": "192.168.1.105"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Database Design",
+      "description": "Design the database schema for the new application",
+      "status": "completed",
+      "priority": "high",
+      "category": "Development",
+      "dueDate": "2024-02-15",
+      "userId": 3,
+      "createdAt": "2024-01-15T10:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Frontend Development",
+      "description": "Develop the user interface components",
+      "status": "in-progress",
+      "priority": "medium",
+      "category": "Development",
+      "dueDate": "2024-02-20",
+      "userId": 3,
+      "createdAt": "2024-01-15T10:35:00.000Z"
+    },
+    {
+      "id": 4,
+      "title": "Testing",
+      "description": "Perform comprehensive testing",
+      "status": "todo",
+      "priority": "medium",
+      "category": "Quality Assurance",
+      "dueDate": "2024-03-01",
+      "userId": 5,
+      "createdAt": "2024-01-15T10:45:00.000Z"
+    },
+    {
+      "id": 5,
+      "title": "Documentation",
+      "description": "Write technical documentation",
+      "status": "todo",
+      "priority": "low",
+      "category": "Documentation",
+      "dueDate": "2024-03-05",
+      "userId": 6,
+      "createdAt": "2024-01-15T10:50:00.000Z"
+    },
+    {
+      "title": "ehe",
+      "description": "123",
+      "priority": "medium",
+      "dueDate": "2025-08-22",
+      "status": "todo",
+      "category": "work",
+      "userId": 2,
+      "createdAt": "2025-08-14T15:52:37.364Z",
+      "updatedAt": "2025-08-14T15:52:37.364Z",
+      "id": 6
+    }
+  ],
+  "system-stats": {
+    "cpuUsage": 28,
+    "ramUsage": 59,
+    "diskUsage": 51,
+    "networkUsage": 19,
+    "lastUpdated": "2025-08-14T16:06:29.459Z"
+  },
+  "activities": [
+    {
+      "id": 1755024852558,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:54:12.558Z"
+    },
+    {
+      "id": 1755024822547,
+      "username": "user1",
+      "action": "Tạo task mới: Frontend Development",
+      "type": "create",
+      "timestamp": "2025-08-12T18:53:42.547Z"
+    },
+    {
+      "id": 1755024792537,
+      "username": "admin",
+      "action": "Xem báo cáo hệ thống",
+      "type": "view",
+      "timestamp": "2025-08-12T18:53:12.537Z"
+    },
+    {
+      "id": 1755024762531,
+      "username": "user2",
+      "action": "Cập nhật task: Backend API",
+      "type": "update",
+      "timestamp": "2025-08-12T18:52:42.531Z"
+    },
+    {
+      "id": 1755024732521,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:52:12.521Z"
+    },
+    {
+      "id": 1755024702505,
+      "username": "user2",
+      "action": "Cập nhật task: Backend API",
+      "type": "update",
+      "timestamp": "2025-08-12T18:51:42.505Z"
+    },
+    {
+      "id": 1755024672490,
+      "username": "user1",
+      "action": "Tạo task mới: Frontend Development",
+      "type": "create",
+      "timestamp": "2025-08-12T18:51:12.490Z"
+    },
+    {
+      "id": 1755024642489,
+      "username": "user1",
+      "action": "Xem calendar",
+      "type": "view",
+      "timestamp": "2025-08-12T18:50:42.489Z"
+    },
+    {
+      "id": 1755024612474,
+      "username": "user2",
+      "action": "Tạo task mới: Testing",
+      "type": "create",
+      "timestamp": "2025-08-12T18:50:12.474Z"
+    },
+    {
+      "id": 1755024582463,
+      "username": "admin",
+      "action": "Xem báo cáo hệ thống",
+      "type": "view",
+      "timestamp": "2025-08-12T18:49:42.463Z"
+    },
+    {
+      "id": 1755024552460,
+      "username": "user3",
+      "action": "Cập nhật profile",
+      "type": "update",
+      "timestamp": "2025-08-12T18:49:12.460Z"
+    },
+    {
+      "id": 1755024522451,
+      "username": "user2",
+      "action": "Tạo task mới: Testing",
+      "type": "create",
+      "timestamp": "2025-08-12T18:48:42.451Z"
+    },
+    {
+      "id": 1755024492450,
+      "username": "user1",
+      "action": "Hoàn thành task: Database Design",
+      "type": "complete",
+      "timestamp": "2025-08-12T18:48:12.450Z"
+    },
+    {
+      "id": 1755024462450,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:47:42.450Z"
+    },
+    {
+      "id": 1755024432449,
+      "username": "admin",
+      "action": "Xem dashboard",
+      "type": "view",
+      "timestamp": "2025-08-12T18:47:12.449Z"
+    },
+    {
+      "id": 1755024402435,
+      "username": "admin",
+      "action": "Xem báo cáo hệ thống",
+      "type": "view",
+      "timestamp": "2025-08-12T18:46:42.435Z"
+    },
+    {
+      "id": 1755024372434,
+      "username": "user1",
+      "action": "Hoàn thành task: Database Design",
+      "type": "complete",
+      "timestamp": "2025-08-12T18:46:12.434Z"
+    },
+    {
+      "id": 1755024342427,
+      "username": "user2",
+      "action": "Cập nhật task: Backend API",
+      "type": "update",
+      "timestamp": "2025-08-12T18:45:42.427Z"
+    },
+    {
+      "id": 1755024312424,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:45:12.424Z"
+    },
+    {
+      "id": 1755024282411,
+      "username": "user2",
+      "action": "Tạo task mới: Testing",
+      "type": "create",
+      "timestamp": "2025-08-12T18:44:42.411Z"
+    },
+    {
+      "id": 1755024252401,
+      "username": "user1",
+      "action": "Xem calendar",
+      "type": "view",
+      "timestamp": "2025-08-12T18:44:12.401Z"
+    },
+    {
+      "id": 1755024222398,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:43:42.398Z"
+    },
+    {
+      "id": 1755024192389,
+      "username": "user1",
+      "action": "Xem calendar",
+      "type": "view",
+      "timestamp": "2025-08-12T18:43:12.389Z"
+    },
+    {
+      "id": 1755024162379,
+      "username": "user2",
+      "action": "Tạo task mới: Testing",
+      "type": "create",
+      "timestamp": "2025-08-12T18:42:42.379Z"
+    },
+    {
+      "id": 1755024132379,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:42:12.379Z"
+    },
+    {
+      "id": 1755024102376,
+      "username": "user2",
+      "action": "Cập nhật task: Backend API",
+      "type": "update",
+      "timestamp": "2025-08-12T18:41:42.376Z"
+    },
+    {
+      "id": 1755024072364,
+      "username": "user3",
+      "action": "Cập nhật profile",
+      "type": "update",
+      "timestamp": "2025-08-12T18:41:12.364Z"
+    },
+    {
+      "id": 1755024042348,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:40:42.348Z"
+    },
+    {
+      "id": 1755024012347,
+      "username": "user3",
+      "action": "Cập nhật profile",
+      "type": "update",
+      "timestamp": "2025-08-12T18:40:12.347Z"
+    },
+    {
+      "id": 1755023982337,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:39:42.337Z"
+    },
+    {
+      "id": 1755023952323,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:39:12.323Z"
+    },
+    {
+      "id": 1755023922315,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:38:42.315Z"
+    },
+    {
+      "id": 1755023892310,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:38:12.310Z"
+    },
+    {
+      "id": 1755023862295,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:37:42.295Z"
+    },
+    {
+      "id": 1755023832287,
+      "username": "admin",
+      "action": "Xem dashboard",
+      "type": "view",
+      "timestamp": "2025-08-12T18:37:12.287Z"
+    },
+    {
+      "id": 1755023802274,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:36:42.274Z"
+    },
+    {
+      "id": 1755023772264,
+      "username": "user1",
+      "action": "Hoàn thành task: Database Design",
+      "type": "complete",
+      "timestamp": "2025-08-12T18:36:12.264Z"
+    },
+    {
+      "id": 1755023742263,
+      "username": "user1",
+      "action": "Tạo task mới: Frontend Development",
+      "type": "create",
+      "timestamp": "2025-08-12T18:35:42.264Z"
+    },
+    {
+      "id": 1755023712256,
+      "username": "admin",
+      "action": "Xem dashboard",
+      "type": "view",
+      "timestamp": "2025-08-12T18:35:12.256Z"
+    },
+    {
+      "id": 1755023682244,
+      "username": "user1",
+      "action": "Tạo task mới: Frontend Development",
+      "type": "create",
+      "timestamp": "2025-08-12T18:34:42.244Z"
+    },
+    {
+      "id": 1755023652231,
+      "username": "admin",
+      "action": "Xem báo cáo hệ thống",
+      "type": "view",
+      "timestamp": "2025-08-12T18:34:12.231Z"
+    },
+    {
+      "id": 1755023622228,
+      "username": "user2",
+      "action": "Cập nhật task: Backend API",
+      "type": "update",
+      "timestamp": "2025-08-12T18:33:42.228Z"
+    },
+    {
+      "id": 1755023592214,
+      "username": "user3",
+      "action": "Cập nhật profile",
+      "type": "update",
+      "timestamp": "2025-08-12T18:33:12.214Z"
+    },
+    {
+      "id": 1755023562214,
+      "username": "user1",
+      "action": "Xem calendar",
+      "type": "view",
+      "timestamp": "2025-08-12T18:32:42.214Z"
+    },
+    {
+      "id": 1755023532210,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:32:12.210Z"
+    },
+    {
+      "id": 1755023502210,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:31:42.210Z"
+    },
+    {
+      "id": 1755023472200,
+      "username": "user2",
+      "action": "Tạo task mới: Testing",
+      "type": "create",
+      "timestamp": "2025-08-12T18:31:12.200Z"
+    },
+    {
+      "id": 1755023442191,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:30:42.191Z"
+    },
+    {
+      "id": 1755023412179,
+      "username": "user4",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-12T18:30:12.179Z"
+    },
+    {
+      "id": 1755023382169,
+      "username": "user3",
+      "action": "Đăng nhập vào hệ thống",
+      "type": "login",
+      "timestamp": "2025-08-12T18:29:42.169Z"
+    },
+    {
+      "id": 1755186731121,
+      "username": "admin",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-14T15:52:11.121Z"
+    },
+    {
+      "id": 1755186757415,
+      "username": "2",
+      "action": "Tạo task mới: ehe",
+      "type": "create",
+      "timestamp": "2025-08-14T15:52:37.415Z"
+    },
+    {
+      "id": 1755186759446,
+      "username": "hng121",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-14T15:52:39.446Z"
+    },
+    {
+      "id": 1755186913750,
+      "username": "admin",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-14T15:55:13.750Z"
+    }
+  ]
+}

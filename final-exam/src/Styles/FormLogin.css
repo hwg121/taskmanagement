@@ -1,0 +1,344 @@
+/* Enhanced Beautiful Login Form CSS */
+
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  padding: 2rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 25%, #c3cfe2 75%, #2c3e50 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><radialGradient id="a" cx=".66" cy=".9" r="3"><stop offset="20%" stop-color="%23fff" stop-opacity=".2"/><stop offset="100%" stop-color="%23fff" stop-opacity="0"/></radialGradient></defs><circle fill="url(%23a)" cx="13" cy="1.3" r=".7"/><circle fill="url(%23a)" cx="26" cy="5.3" r=".7"/><circle fill="url(%23a)" cx="10" cy="15.3" r=".7"/><circle fill="url(%23a)" cx="40" cy="6" r=".7"/><circle fill="url(%23a)" cx="25" cy="18.3" r=".7"/><circle fill="url(%23a)" cx="90" cy="10.3" r=".7"/></svg>');
+  opacity: 0.6;
+  animation: floatParticles 15s ease-in-out infinite;
+}
+
+@keyframes floatParticles {
+  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+  50% { transform: translateY(-15px) rotate(3deg); opacity: 0.8; }
+}
+
+.login-form {
+  width: 100%;
+  max-width: 440px;
+  padding: 3rem 2.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  z-index: 1;
+}
+
+
+
+.login-form:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 35px 70px -12px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.login-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #7f8c8d 75%, #2c3e50 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2rem;
+  position: relative;
+  animation: titleGlow 4s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+
+
+.form-field {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: none;
+  border-radius: 16px;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  position: relative;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 0 0 4px rgba(44, 62, 80, 0.15),
+    0 10px 25px -5px rgba(44, 62, 80, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.form-input:focus + .form-label {
+  color: #2c3e50;
+}
+
+.form-input--error {
+  background: rgba(254, 178, 178, 0.2);
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes shake {
+  0%, 20%, 40%, 60%, 80%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+}
+
+.form-input--error:focus {
+  box-shadow: 
+    0 0 0 4px rgba(245, 101, 101, 0.15),
+    0 10px 25px -5px rgba(245, 101, 101, 0.2);
+}
+
+.form-input:disabled {
+  background-color: rgba(241, 243, 244, 0.8);
+  color: #718096;
+  cursor: not-allowed;
+  backdrop-filter: blur(5px);
+}
+
+.form-error {
+  display: block;
+  color: #f56565;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: errorSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes errorSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #7f8c8d 75%, #2c3e50 100%);
+  background-size: 200% 200%;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: buttonGradient 3s ease-in-out infinite;
+}
+
+@keyframes buttonGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 20px 40px -10px rgba(44, 62, 80, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation-play-state: paused;
+  background-position: 100% 50%;
+}
+
+.submit-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.submit-btn:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 4px rgba(44, 62, 80, 0.3),
+    0 20px 40px -10px rgba(44, 62, 80, 0.4);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+  transform: none;
+  animation: none;
+}
+
+/* Loading spinner for submit button */
+.submit-btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.submit-btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-form-container {
+    padding: 1rem;
+    min-height: 100vh;
+  }
+
+  .login-form {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+    max-width: 100%;
+  }
+
+  .login-title {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-input {
+    padding: 0.875rem 1rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .submit-btn {
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .login-form {
+    background: rgba(26, 32, 44, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .form-label {
+    color: #e2e8f0;
+  }
+
+  .form-input {
+    background: rgba(45, 55, 72, 0.8);
+    color: #e2e8f0;
+  }
+
+  .form-input:focus {
+    background: rgba(45, 55, 72, 0.95);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .login-form {
+    border: 2px solid #000;
+    box-shadow: none;
+  }
+
+  .form-input {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .submit-btn {
+    background: #000;
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .login-form-container::before {
+    animation: none;
+  }
+
+  .login-form::before,
+  .login-title,
+  .login-title::after,
+  .submit-btn {
+    animation: none;
+  }
+
+  .login-form:hover,
+  .form-input:focus,
+  .submit-btn:hover {
+    transform: none;
+  }
+}

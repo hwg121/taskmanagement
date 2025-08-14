@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1755022638885,
+    "username": "user1",
+    "action": "Tạo task mới: Frontend Development",
+    "type": "create",
+    "timestamp": "2025-08-12T18:20:00.000Z"
+  },
+  {
+    "id": 1755022608875,
+    "username": "admin",
+    "action": "Xem báo cáo hệ thống",
+    "type": "view",
+    "timestamp": "2025-08-12T18:16:48.875Z"
+  },
+  {
+    "id": 1755022578873,
+    "username": "user1",
+    "action": "Hoàn thành task: Database Design",
+    "type": "complete",
+    "timestamp": "2025-08-12T18:16:18.873Z"
+  },
+  {
+    "id": 1755022548864,
+    "username": "user2",
+    "action": "Cập nhật task: Backend API",
+    "type": "update",
+    "timestamp": "2025-08-12T18:15:48.864Z"
+  },
+  {
+    "id": 1755022518850,
+    "username": "user3",
+    "action": "Đăng nhập vào hệ thống",
+    "type": "login",
+    "timestamp": "2025-08-12T18:15:18.850Z"
+  },
+  {
+    "id": 1755022488836,
+    "username": "user4",
+    "action": "Đăng xuất khỏi hệ thống",
+    "type": "logout",
+    "timestamp": "2025-08-12T18:14:48.836Z"
+  },
+  {
+    "id": 1755022458830,
+    "username": "user1",
+    "action": "Hoàn thành task: Database Design",
+    "type": "complete",
+    "timestamp": "2025-08-12T18:14:18.830Z"
+  },
+  {
+    "id": 1755022428811,
+    "username": "user1",
+    "action": "Xem calendar",
+    "type": "view",
+    "timestamp": "2025-08-12T18:13:48.811Z"
+  },
+  {
+    "id": 1,
+    "username": "admin",
+    "action": "Đăng nhập vào hệ thống",
+    "type": "login",
+    "timestamp": "2025-08-12T18:20:00.000Z"
+  },
+  {
+    "id": 2,
+    "username": "user1",
+    "action": "Tạo task mới: Landing Page Design",
+    "type": "create",
+    "timestamp": "2025-08-12T18:18:00.000Z"
+  },
+  {
+    "id": 3,
+    "username": "user2",
+    "action": "Cập nhật task: API Integration",
+    "type": "update",
+    "timestamp": "2024-01-15T10:20:00.000Z"
+  },
+  {
+    "id": 4,
+    "username": "user3",
+    "action": "Đăng nhập vào hệ thống",
+    "type": "login",
+    "timestamp": "2024-01-15T10:15:00.000Z"
+  },
+  {
+    "id": 5,
+    "username": "user1",
+    "action": "Hoàn thành task: Database Setup",
+    "type": "complete",
+    "timestamp": "2024-01-15T10:10:00.000Z"
+  },
+  {
+    "id": 6,
+    "username": "user4",
+    "action": "Đăng xuất khỏi hệ thống",
+    "type": "logout",
+    "timestamp": "2024-01-15T10:05:00.000Z"
+  },
+  {
+    "id": 7,
+    "username": "admin",
+    "action": "Xem báo cáo hệ thống",
+    "type": "view",
+    "timestamp": "2024-01-15T10:00:00.000Z"
+  },
+  {
+    "id": 8,
+    "username": "user2",
+    "action": "Tạo task mới: User Authentication",
+    "type": "create",
+    "timestamp": "2024-01-15T09:55:00.000Z"
+  },
+  {
+    "id": 9,
+    "username": "user3",
+    "action": "Cập nhật profile",
+    "type": "update",
+    "timestamp": "2024-01-15T09:50:00.000Z"
+  },
+  {
+    "id": 10,
+    "username": "user1",
+    "action": "Xem dashboard",
+    "type": "view",
+    "timestamp": "2024-01-15T09:45:00.000Z"
+  }
+]
