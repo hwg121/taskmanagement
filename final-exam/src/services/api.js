@@ -13,7 +13,9 @@ import {
   errorHandler
 } from '../utils/validation.js';
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://task-management-new-70f78e078f73.herokuapp.com'
+  : 'http://localhost:3001';
 const FETCH_TIMEOUT = 10000; // Tăng timeout lên 10s
 
 class ApiService {
