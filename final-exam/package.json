@@ -3,59 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "json-server": "^0.17.3",
-    "lucide-react": "^0.539.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^7.7.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "helmet": "^7.1.0",
     "compression": "^1.7.4",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^7.7.1",
+    "react-scripts": "5.0.1"
   },
-  
   "scripts": {
     "start": "node server.js",
     "start:react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "json-server --watch db.json --port 3001 --cors --middlewares ./json-server-middleware.js",
-    "dev": "concurrently \"npm run server\" \"npm run updater:stats\" \"npm run updater:activity\" \"npm run start:react\"",
-    "build:css": "postcss src/index.css -o src/tailwind.css",
-    "updater:stats": "node scripts/update-system-stats.js",
-    "updater:activity": "node scripts/log-activity.js",
-    "test:stats": "node scripts/test-system-stats.js",
-    "reset:stats": "node scripts/reset-system-stats.js",
-    "force:stats": "node scripts/force-update-stats.js",
-    "test:all": "node scripts/test-all.js",
-    "test:api": "node scripts/test-api.js",
-    "heroku:setup": "node scripts/heroku-setup.js",
     "heroku-postbuild": "npm run build"
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.18",
-    "concurrently": "^8.2.0",
-    "postcss": "^8.4.35",
-    "postcss-cli": "^11.0.0",
-    "tailwindcss": "^3.4.1"
   },
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=8.0.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
