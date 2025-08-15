@@ -6,7 +6,7 @@
       "password": "admin123",
       "email": "admin@gmail.com",
       "createdAt": "2024-01-15T10:00:00.000Z",
-      "lastLogin": "2025-08-14T15:53:25.230Z",
+      "lastLogin": "2025-08-14T16:31:44.077Z",
       "ip": "192.168.1.166"
     },
     {
@@ -15,7 +15,7 @@
       "password": "123123",
       "email": "nguyenhung12105@gmail.com",
       "createdAt": "2024-01-15T10:05:00.000Z",
-      "lastLogin": "2025-08-14T15:52:16.449Z",
+      "lastLogin": "2025-08-14T16:32:05.154Z",
       "ip": "192.168.1.191"
     },
     {
@@ -114,11 +114,11 @@
     }
   ],
   "system-stats": {
-    "cpuUsage": 28,
-    "ramUsage": 59,
-    "diskUsage": 51,
-    "networkUsage": 19,
-    "lastUpdated": "2025-08-14T16:06:29.459Z"
+    "cpuUsage": 47,
+    "ramUsage": 48,
+    "diskUsage": 64,
+    "networkUsage": 51,
+    "lastUpdated": "2025-08-15T21:09:15.630Z"
   },
   "activities": [
     {
@@ -498,6 +498,20 @@
       "action": "Đăng xuất khỏi hệ thống",
       "type": "logout",
       "timestamp": "2025-08-14T15:55:13.750Z"
+    },
+    {
+      "id": 1755188828789,
+      "username": "admin",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-14T16:27:08.789Z"
+    },
+    {
+      "id": 1755189117321,
+      "username": "admin",
+      "action": "Đăng xuất khỏi hệ thống",
+      "type": "logout",
+      "timestamp": "2025-08-14T16:31:57.321Z"
     }
   ]
 }

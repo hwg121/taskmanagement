@@ -1,0 +1,31 @@
+{
+  "name": "task-management-system",
+  "description": "A modern task management system with admin dashboard and user management",
+  "repository": "https://github.com/yourusername/final-exam",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["node", "express", "react", "task-management", "admin-dashboard"],
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment setting",
+      "value": "production"
+    },
+    "PORT": {
+      "description": "Port for the application",
+      "value": "3001"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "addons": [
+    "heroku-postgresql:mini"
+  ]
+}

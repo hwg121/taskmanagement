@@ -18,7 +18,7 @@ Lệnh này sẽ chạy:
 
 Sử dụng tài khoản admin:
 - **Username:** `admin`
-- **Password:** `admin`
+- **Password:** `admin123`
 
 ### 3. Các tính năng Admin Dashboard
 
