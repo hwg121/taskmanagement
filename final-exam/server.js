@@ -141,7 +141,7 @@ const writeDb = (filePath, data) => {
 
 // API Routes
 
-// Health check
+// Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -339,10 +339,17 @@ app.post('/system-stats', (req, res) => {
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'build')));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  // For now, just serve API endpoints without React build
+  app.get('/', (req, res) => {
+    res.json({ 
+      message: 'Task Management API is running!',
+      endpoints: [
+        '/users',
+        '/tasks', 
+        '/activities',
+        '/system-stats'
+      ]
+    });
   });
 }
 
