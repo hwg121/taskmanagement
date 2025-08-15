@@ -16,17 +16,23 @@ app.use(helmet({
 app.use(compression());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://taskmanagement-three-gamma.vercel.app'] 
+    ? ['https://task-management-new-70f78e078f73.herokuapp.com', 'https://taskmanagement-three-gamma.vercel.app'] 
     : ['http://localhost:3000'],
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Database file paths
-const dbPath = path.join(__dirname, 'db.json');
-const activitiesPath = path.join(__dirname, 'db', 'activities.json');
-const systemStatsPath = path.join(__dirname, 'db', 'system-stats.json');
+// Database file paths - use tmp directory on Heroku for writable files
+const dbPath = process.env.NODE_ENV === 'production' 
+  ? '/tmp/db.json' 
+  : path.join(__dirname, 'db.json');
+const activitiesPath = process.env.NODE_ENV === 'production'
+  ? '/tmp/activities.json'
+  : path.join(__dirname, 'db', 'activities.json');
+const systemStatsPath = process.env.NODE_ENV === 'production'
+  ? '/tmp/system-stats.json'
+  : path.join(__dirname, 'db', 'system-stats.json');
 
 // Ensure database files exist
 const ensureDbFiles = () => {
@@ -95,21 +101,33 @@ const ensureDbFiles = () => {
 
   // Create activities database if not exists
   if (!fs.existsSync(activitiesPath)) {
-    const dbDir = path.dirname(activitiesPath);
-    if (!fs.existsSync(dbDir)) {
-      fs.mkdirSync(dbDir, { recursive: true });
+    if (process.env.NODE_ENV === 'production') {
+      // On Heroku, just create the file directly in /tmp
+      fs.writeFileSync(activitiesPath, JSON.stringify(defaultActivities, null, 2));
+    } else {
+      // On local, create directory structure
+      const dbDir = path.dirname(activitiesPath);
+      if (!fs.existsSync(dbDir)) {
+        fs.mkdirSync(dbDir, { recursive: true });
+      }
+      fs.writeFileSync(activitiesPath, JSON.stringify(defaultActivities, null, 2));
     }
-    fs.writeFileSync(activitiesPath, JSON.stringify(defaultActivities, null, 2));
     console.log('Created activities database');
   }
 
   // Create system stats database if not exists
   if (!fs.existsSync(systemStatsPath)) {
-    const dbDir = path.dirname(systemStatsPath);
-    if (!fs.existsSync(dbDir)) {
-      fs.mkdirSync(dbDir, { recursive: true });
+    if (process.env.NODE_ENV === 'production') {
+      // On Heroku, just create the file directly in /tmp
+      fs.writeFileSync(systemStatsPath, JSON.stringify(defaultSystemStats, null, 2));
+    } else {
+      // On local, create directory structure
+      const dbDir = path.dirname(systemStatsPath);
+      if (!fs.existsSync(dbDir)) {
+        fs.mkdirSync(dbDir, { recursive: true });
+      }
+      fs.writeFileSync(systemStatsPath, JSON.stringify(defaultSystemStats, null, 2));
     }
-    fs.writeFileSync(systemStatsPath, JSON.stringify(defaultSystemStats, null, 2));
     console.log('Created system stats database');
   }
 };
@@ -143,10 +161,25 @@ const writeDb = (filePath, data) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
+  const dbExists = fs.existsSync(dbPath);
+  const activitiesExists = fs.existsSync(activitiesPath);
+  const statsExists = fs.existsSync(systemStatsPath);
+  
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    database: {
+      main: dbExists,
+      activities: activitiesExists,
+      systemStats: statsExists
+    },
+    endpoints: [
+      '/users',
+      '/tasks',
+      '/activities', 
+      '/system-stats'
+    ]
   });
 });
 
