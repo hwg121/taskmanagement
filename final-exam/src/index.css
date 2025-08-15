@@ -170,3 +170,103 @@ button:active {
   animation: pulse-glass 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Mobile responsive improvements */
+@media (max-width: 480px) {
+  /* Reduce padding and margins */
+  .container {
+    padding: 0.5rem;
+  }
+  
+  /* Make text smaller on mobile */
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  h3 {
+    font-size: 1.1rem !important;
+  }
+  
+  /* Improve button sizes */
+  button {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Improve input fields */
+  input, select, textarea {
+    padding: 0.5rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Improve card layouts */
+  .card, .bg-gradient-to-br {
+    padding: 0.75rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  /* Improve grid layouts */
+  .grid {
+    gap: 0.5rem !important;
+  }
+  
+  /* Improve spacing */
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+  
+  .space-y-2 > * + * {
+    margin-top: 0.5rem !important;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 320px) {
+  .container {
+    padding: 0.25rem;
+  }
+  
+  h1 {
+    font-size: 1.25rem !important;
+  }
+  
+  h2 {
+    font-size: 1.1rem !important;
+  }
+  
+  button {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  input, select, textarea {
+    padding: 0.4rem !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .container {
+    padding: 0.75rem;
+  }
+  
+  /* Reduce vertical spacing for landscape */
+  .py-8 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  .py-4 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+}
+

@@ -23,6 +23,9 @@ import {
   Search
 } from 'lucide-react';
 
+// Import API service
+import apiService from '../../services/api.js';
+
 const AdminDashboard = ({ user, onLogout }) => {
   const [systemStats, setSystemStats] = useState({
     cpuUsage: 0,
@@ -45,20 +48,14 @@ const AdminDashboard = ({ user, onLogout }) => {
   useEffect(() => {
     const fetchSystemStats = async () => {
       try {
-        const response = await fetch('http://localhost:3001/system-stats');
-        if (response.ok) {
-          const stats = await response.json();
-          console.log('System stats received:', stats); // Debug log
-          setSystemStats({
-            cpuUsage: stats.cpuUsage || 0,
-            ramUsage: stats.ramUsage || 0,
-            diskUsage: stats.diskUsage || 0,
-            networkUsage: stats.networkUsage || 0
-          });
-        } else {
-          console.log('System stats response not ok:', response.status);
-          throw new Error('Response not ok');
-        }
+        const stats = await apiService.getSystemStats();
+        console.log('System stats received:', stats); // Debug log
+        setSystemStats({
+          cpuUsage: stats.cpuUsage || 0,
+          ramUsage: stats.ramUsage || 0,
+          diskUsage: stats.diskUsage || 0,
+          networkUsage: stats.networkUsage || 0
+        });
       } catch (error) {
         console.error('Error fetching system stats:', error);
         // Không có dữ liệu ảo, chỉ hiển thị thông báo lỗi
@@ -80,42 +77,39 @@ const AdminDashboard = ({ user, onLogout }) => {
   useEffect(() => {
     const fetchOnlineUsers = async () => {
       try {
-        const response = await fetch('http://localhost:3001/users');
-        if (response.ok) {
-          const users = await response.json();
-                     // Transform users data to include online status
-           const usersWithStatus = users.map(user => {
-             // Check if user is online (logged in within last 30 minutes)
-             const lastLoginTime = user.lastLogin ? new Date(user.lastLogin) : null;
-             const now = new Date();
-             const timeDiff = lastLoginTime ? (now - lastLoginTime) / (1000 * 60) : null; // minutes
-             
-             let status = 'offline';
-             if (timeDiff !== null) {
-               if (timeDiff < 10) status = 'online';      // Online if logged in < 10 minutes ago
-               else if (timeDiff < 60) status = 'idle';   // Idle if logged in < 1 hour ago
-               else status = 'offline';                   // Offline if > 1 hour ago
-             }
-             
-             console.log(`User ${user.username}: lastLogin=${user.lastLogin}, timeDiff=${timeDiff} minutes, status=${status}`);
-             
-             return {
-               id: user.id,
-               username: user.username,
-               email: user.email,           // Thêm email
-               password: user.password,     // Thêm password
-               status: status,
-               lastActivity: user.lastLogin ? formatTimeAgo(new Date(user.lastLogin)) : 'Chưa đăng nhập',
-               ip: user.ip || 'N/A'
-             };
-           });
-          setOnlineUsers(usersWithStatus);
-        }
+        const users = await apiService.getUsers();
+        // Transform users data to include online status
+        const usersWithStatus = users.map(user => {
+          // Check if user is online (logged in within last 30 minutes)
+          const lastLoginTime = user.lastLogin ? new Date(user.lastLogin) : null;
+          const now = new Date();
+          const timeDiff = lastLoginTime ? (now - lastLoginTime) / (1000 * 60) : null; // minutes
+          
+          let status = 'offline';
+          if (timeDiff !== null) {
+            if (timeDiff < 10) status = 'online';      // Online if logged in < 10 minutes ago
+            else if (timeDiff < 60) status = 'idle';   // Idle if logged in < 1 hour ago
+            else status = 'offline';                   // Offline if > 1 hour ago
+          }
+          
+          console.log(`User ${user.username}: lastLogin=${user.lastLogin}, timeDiff=${timeDiff} minutes, status=${status}`);
+          
+          return {
+            id: user.id,
+            username: user.username,
+            email: user.email,           // Thêm email
+            password: user.password,     // Thêm password
+            status: status,
+            lastActivity: user.lastLogin ? formatTimeAgo(new Date(user.lastLogin)) : 'Chưa đăng nhập',
+            ip: user.ip || 'N/A'
+          };
+        });
+        setOnlineUsers(usersWithStatus);
       } catch (error) {
         console.error('Error fetching users:', error);
-                          // Không có dữ liệu ảo, chỉ hiển thị thông báo lỗi
-         setOnlineUsers([]);
-         setError('Không thể tải danh sách người dùng. Vui lòng thử lại.');
+        // Không có dữ liệu ảo, chỉ hiển thị thông báo lỗi
+        setOnlineUsers([]);
+        setError('Không thể tải danh sách người dùng. Vui lòng thử lại.');
       }
     };
 
@@ -129,19 +123,16 @@ const AdminDashboard = ({ user, onLogout }) => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const response = await fetch('http://localhost:3001/activities');
-        if (response.ok) {
-          const activities = await response.json();
-          // Transform activities data
-          const transformedActivities = activities.map(activity => ({
-            id: activity.id,
-            user: activity.username,
-            action: activity.action,
-            time: formatTimeAgo(new Date(activity.timestamp)),
-            type: activity.type
-          }));
-          setRecentActivity(transformedActivities);
-        }
+        const activities = await apiService.getActivities();
+        // Transform activities data
+        const transformedActivities = activities.map(activity => ({
+          id: activity.id,
+          user: activity.username,
+          action: activity.action,
+          time: formatTimeAgo(new Date(activity.timestamp)),
+          type: activity.type
+        }));
+        setRecentActivity(transformedActivities);
       } catch (error) {
         console.error('Error fetching activities:', error);
         // Không có dữ liệu ảo, chỉ hiển thị thông báo lỗi
@@ -197,28 +188,20 @@ const AdminDashboard = ({ user, onLogout }) => {
   // User management functions
   const handleDeleteUser = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'DELETE'
-      });
+      await apiService.deleteUser(userId);
       
-      if (response.ok) {
-        // Remove user from local state
-        setOnlineUsers(prev => prev.filter(u => u.id !== userId));
-        setShowDeleteConfirm(null);
-        
-        // Log activity
-        await fetch('http://localhost:3001/activities', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: Date.now(),
-            username: 'admin',
-            action: `Xóa user ID: ${userId}`,
-            type: 'delete',
-            timestamp: new Date().toISOString()
-          })
-        });
-      }
+      // Remove user from local state
+      setOnlineUsers(prev => prev.filter(u => u.id !== userId));
+      setShowDeleteConfirm(null);
+      
+      // Log activity
+      await apiService.logActivity({
+        id: Date.now(),
+        username: 'admin',
+        action: `Xóa user ID: ${userId}`,
+        type: 'delete',
+        timestamp: new Date().toISOString()
+      });
     } catch (error) {
       console.error('Error deleting user:', error);
     }
@@ -226,32 +209,22 @@ const AdminDashboard = ({ user, onLogout }) => {
 
   const handleUpdateUser = async (userId, updates) => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
-      });
+      await apiService.updateUser(userId, updates);
       
-      if (response.ok) {
-        // Update user in local state
-        setOnlineUsers(prev => prev.map(u => 
-          u.id === userId ? { ...u, ...updates } : u
-        ));
-        setEditingUser(null);
-        
-        // Log activity
-        await fetch('http://localhost:3001/activities', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: Date.now(),
-            username: 'admin',
-            action: `Cập nhật user: ${updates.username || 'N/A'}`,
-            type: 'update',
-            timestamp: new Date().toISOString()
-          })
-        });
-      }
+      // Update user in local state
+      setOnlineUsers(prev => prev.map(u => 
+        u.id === userId ? { ...u, ...updates } : u
+      ));
+      setEditingUser(null);
+      
+      // Log activity
+      await apiService.logActivity({
+        id: Date.now(),
+        username: 'admin',
+        action: `Cập nhật user: ${updates.username || 'N/A'}`,
+        type: 'update',
+        timestamp: new Date().toISOString()
+      });
     } catch (error) {
       console.error('Error updating user:', error);
     }
@@ -302,18 +275,18 @@ const AdminDashboard = ({ user, onLogout }) => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         {/* System Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           {/* CPU Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-6 rounded-2xl border border-white/20 hover:border-blue-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-gradient-to-br from-blue-500/30 to-indigo-500/30 rounded-xl group-hover:from-blue-500/40 group-hover:to-indigo-500/40 transition-all duration-300">
-                <Cpu className="h-6 w-6 text-blue-400" />
+          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-blue-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-500/30 to-indigo-500/30 rounded-lg sm:rounded-xl group-hover:from-blue-500/40 group-hover:to-indigo-500/40 transition-all duration-300">
+                <Cpu className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
               </div>
               <div className="text-right">
                 <p className="text-blue-200 text-xs font-medium">CPU Usage</p>
-                <p className={`text-2xl font-bold ${getUsageColor(systemStats.cpuUsage)}`}>
+                <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.cpuUsage)}`}>
                   {systemStats.cpuUsage}%
                 </p>
               </div>
@@ -330,14 +303,14 @@ const AdminDashboard = ({ user, onLogout }) => {
           </div>
 
           {/* RAM Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-6 rounded-2xl border border-white/20 hover:border-green-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-xl group-hover:from-green-500/40 group-hover:to-emerald-500/40 transition-all duration-300">
-                <Activity className="h-6 w-6 text-green-400" />
+          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-green-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-lg sm:rounded-xl group-hover:from-green-500/40 group-hover:to-emerald-500/40 transition-all duration-300">
+                <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
               </div>
               <div className="text-right">
                 <p className="text-green-200 text-xs font-medium">RAM Usage</p>
-                <p className={`text-2xl font-bold ${getUsageColor(systemStats.ramUsage)}`}>
+                <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.ramUsage)}`}>
                   {systemStats.ramUsage}%
                 </p>
               </div>
@@ -354,14 +327,14 @@ const AdminDashboard = ({ user, onLogout }) => {
           </div>
 
           {/* Disk Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-6 rounded-2xl border border-white/20 hover:border-purple-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-xl group-hover:from-purple-500/40 group-hover:to-pink-500/40 transition-all duration-300">
-                <HardDrive className="h-6 w-6 text-purple-400" />
+          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-purple-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-lg sm:rounded-xl group-hover:from-purple-500/40 group-hover:to-pink-500/40 transition-all duration-300">
+                <HardDrive className="h-5 w-5 sm:h-6 sm:w-6 text-purple-400" />
               </div>
               <div className="text-right">
                 <p className="text-purple-200 text-xs font-medium">Disk Usage</p>
-                <p className={`text-2xl font-bold ${getUsageColor(systemStats.diskUsage)}`}>
+                <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.diskUsage)}`}>
                   {systemStats.diskUsage}%
                 </p>
               </div>
@@ -378,14 +351,14 @@ const AdminDashboard = ({ user, onLogout }) => {
           </div>
 
           {/* Network Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-6 rounded-2xl border border-white/20 hover:border-cyan-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-gradient-to-br from-cyan-500/30 to-blue-500/30 rounded-xl group-hover:from-cyan-500/40 group-hover:to-blue-500/40 transition-all duration-300">
-                <Wifi className="h-6 w-6 text-cyan-400" />
+          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-cyan-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-cyan-500/30 to-blue-500/30 rounded-lg sm:rounded-xl group-hover:from-cyan-500/40 group-hover:to-blue-500/40 transition-all duration-300">
+                <Wifi className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-400" />
               </div>
               <div className="text-right">
                 <p className="text-cyan-200 text-xs font-medium">Network</p>
-                <p className={`text-2xl font-bold ${getUsageColor(systemStats.networkUsage)}`}>
+                <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.networkUsage)}`}>
                   {systemStats.networkUsage}%
                 </p>
               </div>
@@ -421,7 +394,7 @@ const AdminDashboard = ({ user, onLogout }) => {
         )}
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
            {/* Online Users */}
            <div className="lg:col-span-1">
              <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 p-6 shadow-lg">
@@ -500,13 +473,13 @@ const AdminDashboard = ({ user, onLogout }) => {
                  <div className="mt-4">
                    <div className="relative">
                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
-                     <input
-                       type="text"
-                       placeholder="Tìm kiếm user..."
-                       value={searchTerm}
-                       onChange={(e) => setSearchTerm(e.target.value)}
-                       className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-blue-500/50 transition-all duration-300"
-                     />
+                                     <input
+                  type="text"
+                  placeholder="Tìm kiếm user..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
+                />
                    </div>
                  </div>
                )}
@@ -560,7 +533,7 @@ const AdminDashboard = ({ user, onLogout }) => {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <AlertTriangle className="h-5 w-5 text-yellow-400" />

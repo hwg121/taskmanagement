@@ -57,6 +57,7 @@
   font-size: 1.1rem;
 }
 
+/* Tablet responsive */
 @media (max-width: 768px) {
   .task-container {
     padding: 1rem;
@@ -72,5 +73,45 @@
 
   .not-found h2 {
     font-size: 1.5rem;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .task-container {
+    padding: 0.5rem;
+  }
+  
+  .task-header {
+    margin-bottom: 1rem;
+  }
+  
+  .add-task-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .not-found {
+    padding: 1rem 0.5rem;
+  }
+  
+  .not-found h2 {
+    font-size: 1.25rem;
+  }
+  
+  .not-found p {
+    font-size: 1rem;
+  }
+}
+
+/* Small mobile responsive */
+@media (max-width: 320px) {
+  .task-container {
+    padding: 0.25rem;
+  }
+  
+  .add-task-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
 }

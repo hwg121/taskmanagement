@@ -2,6 +2,20 @@
 
 Một hệ thống quản lý task hiện đại với giao diện đẹp mắt, tính năng admin dashboard và quản lý người dùng toàn diện.
 
+## 🌐 **Live Demo**
+
+### Frontend (Vercel)
+**URL:** https://taskmanagement-three-gamma.vercel.app
+
+### Backend (Heroku)
+**URL:** https://task-management-new-70f78e078f73.herokuapp.com
+
+**API Endpoints:**
+- Health Check: https://task-management-new-70f78e078f73.herokuapp.com/health
+- Users: https://task-management-new-70f78e078f73.herokuapp.com/users
+- Tasks: https://task-management-new-70f78e078f73.herokuapp.com/tasks
+- System Stats: https://task-management-new-70f78e078f73.herokuapp.com/system-stats
+
 ## ✨ Tính năng chính
 
 ### 🔐 **Hệ thống xác thực**
@@ -283,7 +297,47 @@ curl http://localhost:3001/activities
 npm run test:all
 ```
 
+### Production Debug Commands
+```bash
+# Check Heroku backend health
+curl https://task-management-new-70f78e078f73.herokuapp.com/health
+
+# Check Heroku logs
+heroku logs --tail
+
+# Check Vercel deployment status
+# Visit: https://vercel.com/dashboard
+```
+
 ## 🚀 Deployment
+
+### Frontend Deployment (Vercel)
+1. **Connect GitHub Repository** với Vercel
+2. **Build Command:** `npm run build`
+3. **Output Directory:** `build`
+4. **Environment Variables:**
+   - `NODE_ENV=production`
+   - `REACT_APP_API_URL=https://task-management-new-70f78e078f73.herokuapp.com`
+
+### Backend Deployment (Heroku)
+1. **Create Heroku App:**
+   ```bash
+   heroku create task-management-new-70f78e078f73
+   ```
+
+2. **Set Environment Variables:**
+   ```bash
+   heroku config:set NODE_ENV=production
+   heroku config:set JWT_SECRET=your-secret-key
+   heroku config:set SESSION_SECRET=your-session-secret
+   heroku config:set NPM_CONFIG_PRODUCTION=false
+   heroku config:set NPM_CONFIG_CI=false
+   ```
+
+3. **Deploy:**
+   ```bash
+   git push heroku main
+   ```
 
 ### Production Build
 ```bash
@@ -316,5 +370,6 @@ Dự án này được phát hành dưới MIT License.
 ---
 
 ⭐ **Nếu dự án này hữu ích, hãy cho một star!**
-   
+  
+ 
  
