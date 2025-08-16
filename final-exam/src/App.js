@@ -520,11 +520,22 @@ function App() {
                       {/* Demo Credentials */}
                       <div className="mt-4 p-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-xl border border-blue-400/30 rounded-xl">
                         <div className="text-center">
-                          <p className="text-white/80 text-sm mb-2">Demo Account:</p>
-                          <div className="flex items-center justify-center space-x-2">
-                            <code className="bg-white/20 px-2 py-1 rounded text-white font-mono text-xs">admin</code>
-                            <span className="text-white/60">/</span>
-                            <code className="bg-white/20 px-2 py-1 rounded text-white font-mono text-xs">admin</code>
+                          <p className="text-white/80 text-sm mb-2">Demo Accounts:</p>
+                          <div className="space-y-2">
+                            {/* Admin Account */}
+                            <div className="flex items-center justify-center space-x-2">
+                              <span className="text-white/70 text-xs">Admin:</span>
+                              <code className="bg-white/20 px-2 py-1 rounded text-white font-mono text-xs">admin</code>
+                              <span className="text-white/60">/</span>
+                              <code className="bg-white/20 px-2 py-1 rounded text-white font-mono text-xs">admin123</code>
+                            </div>
+                            {/* User Account */}
+                            <div className="flex items-center justify-center space-x-2">
+                              <span className="text-white/70 text-xs">User:</span>
+                              <code className="bg-white/20 px-2 py-1 rounded text-white font-mono text-xs">user1</code>
+                              <span className="text-white/60">/</span>
+                              <code className="bg-white/20 px-2 py-1 rounded text-white font-mono text-xs">user123</code>
+                            </div>
                           </div>
                         </div>
                       </div>
