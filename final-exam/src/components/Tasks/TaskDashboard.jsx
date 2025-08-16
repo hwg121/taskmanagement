@@ -43,8 +43,8 @@ const TaskDashboard = ({ user, onLogout }) => {
   const [sortDirection, setSortDirection] = useState('asc'); // asc, desc
   const [editingTask, setEditingTask] = useState(null);
   
-  // Pull to refresh
-  const { isRefreshing, pullProgress } = usePullToRefresh(loadTasks);
+  // Pull to refresh - will be defined after loadTasks
+  const [pullToRefreshCallback, setPullToRefreshCallback] = useState(null);
   
   // Debounced search - delay 500ms
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -109,6 +109,14 @@ const TaskDashboard = ({ user, onLogout }) => {
   useEffect(() => {
     loadTasks();
   }, [loadTasks]);
+  
+  // Set up pull to refresh callback after loadTasks is defined
+  useEffect(() => {
+    setPullToRefreshCallback(() => loadTasks);
+  }, [loadTasks]);
+  
+  // Initialize pull to refresh
+  const { isRefreshing, pullProgress } = usePullToRefresh(pullToRefreshCallback || (() => Promise.resolve()));
 
   // Create new task
   const handleCreateTask = async (e) => {
