@@ -520,42 +520,98 @@ const AdminDashboard = ({ user, onLogout }) => {
           </div>
         </div>
 
-        {/* System Alerts */}
-        <div className="mt-8">
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-white flex items-center">
-                <AlertTriangle className="h-6 w-6 mr-3 text-yellow-400" />
-                Cảnh báo hệ thống
-              </h2>
-              <span className="px-3 py-1 bg-gradient-to-r from-yellow-500/30 to-orange-500/30 text-yellow-300 text-sm rounded-full border border-yellow-500/30">
-                2 cảnh báo
-              </span>
-            </div>
+        {/* System Alerts - Only show when metrics > 75% */}
+        {(() => {
+          const alerts = [];
+          let alertCount = 0;
+          
+          // Check CPU usage > 75%
+          if (systemStats.cpuUsage > 75) {
+            alerts.push({
+              type: 'cpu',
+              level: systemStats.cpuUsage > 90 ? 'critical' : 'warning',
+              message: `CPU usage cao: ${systemStats.cpuUsage}%`,
+              description: `CPU usage đang ở mức ${systemStats.cpuUsage}%`
+            });
+            alertCount++;
+          }
+          
+          // Check RAM usage > 75%
+          if (systemStats.ramUsage > 75) {
+            alerts.push({
+              type: 'ram',
+              level: systemStats.ramUsage > 90 ? 'critical' : 'warning',
+              message: `RAM usage cao: ${systemStats.ramUsage}%`,
+              description: `RAM usage đang ở mức ${systemStats.ramUsage}%`
+            });
+            alertCount++;
+          }
+          
+          // Check Disk usage > 75%
+          if (systemStats.diskUsage > 75) {
+            alerts.push({
+              type: 'disk',
+              level: systemStats.diskUsage > 90 ? 'critical' : 'warning',
+              message: `Disk space thấp: ${systemStats.diskUsage}%`,
+              description: `Disk usage đang ở mức ${systemStats.diskUsage}%`
+            });
+            alertCount++;
+          }
+          
+          // Check Network usage > 75%
+          if (systemStats.networkUsage > 75) {
+            alerts.push({
+              type: 'network',
+              level: systemStats.networkUsage > 90 ? 'critical' : 'warning',
+              message: `Network usage cao: ${systemStats.networkUsage}%`,
+              description: `Network usage đang ở mức ${systemStats.networkUsage}%`
+            });
+            alertCount++;
+          }
+          
+          // Only render if there are alerts
+          if (alertCount === 0) return null;
+          
+          return (
+            <div className="mt-8">
+              <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 p-6 shadow-lg">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-white flex items-center">
+                    <AlertTriangle className="h-6 w-6 mr-3 text-yellow-400" />
+                    Cảnh báo hệ thống
+                  </h2>
+                  <span className={`px-3 py-1 rounded-full text-sm border ${
+                    alertCount > 2 ? 'bg-gradient-to-r from-red-500/30 to-red-600/30 text-red-300 border-red-500/30' :
+                    alertCount > 1 ? 'bg-gradient-to-r from-yellow-500/30 to-orange-500/30 text-yellow-300 border-yellow-500/30' :
+                    'bg-gradient-to-r from-blue-500/30 to-indigo-500/30 text-blue-300 border-blue-500/30'
+                  }`}>
+                    {alertCount} cảnh báo
+                  </span>
+                </div>
 
-                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl">
-                <div className="flex items-center space-x-3">
-                  <AlertTriangle className="h-5 w-5 text-yellow-400" />
-                  <div>
-                    <p className="text-white font-medium">RAM Usage cao</p>
-                    <p className="text-white/70 text-sm">RAM usage đang ở mức {systemStats.ramUsage}%</p>
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {alerts.map((alert, index) => (
+                    <div key={index} className={`p-4 border rounded-xl ${
+                      alert.level === 'critical' 
+                        ? 'bg-red-500/10 border-red-500/30' 
+                        : 'bg-yellow-500/10 border-yellow-500/30'
+                    }`}>
+                      <div className="flex items-center space-x-3">
+                        <AlertTriangle className={`h-5 w-5 ${
+                          alert.level === 'critical' ? 'text-red-400' : 'text-yellow-400'
+                        }`} />
+                        <div>
+                          <p className="text-white font-medium">{alert.message}</p>
+                          <p className="text-white/70 text-sm">{alert.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
-                <div className="flex items-center space-x-3">
-                  <AlertTriangle className="h-5 w-5 text-red-400" />
-                  <div>
-                    <p className="text-white font-medium">Disk space thấp</p>
-                    <p className="text-white/70 text-sm">Disk usage đang ở mức {systemStats.diskUsage}%</p>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-                 </div>
+          );
+        })()}
        </div>
 
        {/* Edit User Modal */}
