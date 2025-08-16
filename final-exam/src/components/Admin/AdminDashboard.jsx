@@ -47,6 +47,7 @@ const AdminDashboard = ({ user, onLogout }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
   
   // Debounced search - delay 500ms
@@ -281,6 +282,10 @@ const AdminDashboard = ({ user, onLogout }) => {
       setOnlineUsers(prev => prev.filter(u => u.id !== userId));
       setShowDeleteConfirm(null);
       
+      // Show success message
+      setSuccess('User đã được xóa thành công!');
+      setTimeout(() => setSuccess(null), 2000);
+      
       // Log activity
       await apiService.logActivity({
         id: Date.now(),
@@ -291,6 +296,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       });
     } catch (error) {
       console.error('Error deleting user:', error);
+      setError('Không thể xóa user. Vui lòng thử lại.');
     }
   };
 
@@ -304,6 +310,10 @@ const AdminDashboard = ({ user, onLogout }) => {
       ));
       setEditingUser(null);
       
+      // Show success message
+      setSuccess('User đã được cập nhật thành công!');
+      setTimeout(() => setSuccess(null), 2000);
+      
       // Log activity
       await apiService.logActivity({
         id: Date.now(),
@@ -314,6 +324,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       });
     } catch (error) {
       console.error('Error updating user:', error);
+      setError('Không thể cập nhật user. Vui lòng thử lại.');
     }
   };
 
@@ -803,6 +814,26 @@ const AdminDashboard = ({ user, onLogout }) => {
                  ✕
                </button>
              </div>
+             
+             {/* Error Display - Inside Modal */}
+             {error && (
+               <div className="mb-4 p-3 bg-red-500/20 backdrop-blur-xl border border-red-400/30 rounded-xl">
+                 <div className="flex items-center">
+                   <AlertTriangle className="h-5 w-5 text-red-400 mr-2" />
+                   <p className="text-red-200 text-sm">{error}</p>
+                 </div>
+               </div>
+             )}
+             
+             {/* Success Display - Inside Modal */}
+             {success && (
+               <div className="mb-4 p-3 bg-green-500/20 backdrop-blur-xl border border-green-400/30 rounded-xl">
+                 <div className="flex items-center">
+                   <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
+                   <p className="text-green-200 text-sm">{success}</p>
+                 </div>
+               </div>
+             )}
              
              <form onSubmit={(e) => {
                e.preventDefault();

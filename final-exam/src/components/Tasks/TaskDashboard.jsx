@@ -8,6 +8,7 @@ import {
   Trash2, 
   Edit3, 
   AlertCircle,
+  CheckCircle,
   Target,
   TrendingUp,
   Flag,
@@ -33,6 +34,7 @@ const TaskDashboard = ({ user, onLogout }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
@@ -121,6 +123,30 @@ const TaskDashboard = ({ user, onLogout }) => {
   // Create new task
   const handleCreateTask = async (e) => {
     e.preventDefault();
+    
+    // Validation: Check required fields
+    if (!newTask.title.trim()) {
+      setError('Tiêu đề task không được để trống.');
+      return;
+    }
+    
+    if (!newTask.description.trim()) {
+      setError('Mô tả task không được để trống.');
+      return;
+    }
+    
+    // Validation: Check if due date is from today onwards
+    if (newTask.dueDate) {
+      const selectedDate = new Date(newTask.dueDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to start of day
+      
+      if (selectedDate < today) {
+        setError('Ngày hết hạn phải từ hôm nay trở đi.');
+        return;
+      }
+    }
+    
     try {
       if (editingTask) {
         // Update existing task - đảm bảo chỉ update task của user hiện tại
@@ -167,6 +193,9 @@ const TaskDashboard = ({ user, onLogout }) => {
         }
       }
 
+      setError(null);
+      setSuccess(editingTask ? 'Cập nhật task thành công!' : 'Tạo task mới thành công!');
+      
       setNewTask({
         title: '',
         description: '',
@@ -175,8 +204,13 @@ const TaskDashboard = ({ user, onLogout }) => {
         status: 'todo',
         category: 'work'
       });
-      setShowCreateModal(false);
-      setEditingTask(null);
+      
+      // Auto-hide success message and close modal after 2 seconds
+      setTimeout(() => {
+        setSuccess(null);
+        setShowCreateModal(false);
+        setEditingTask(null);
+      }, 2000);
     } catch (err) {
       console.error('Error creating/updating task:', err);
       setError(editingTask ? 'Không thể cập nhật task. Vui lòng thử lại.' : 'Không thể tạo task mới. Vui lòng thử lại.');
@@ -204,6 +238,8 @@ const TaskDashboard = ({ user, onLogout }) => {
               // Update task status using API service
         try {
           await apiService.updateTask(taskId, { status: newStatus }, user.id);
+          setSuccess(`Task đã được ${newStatus === 'completed' ? 'hoàn thành' : 'chuyển về todo'}!`);
+          setTimeout(() => setSuccess(null), 2000);
         } catch (serverError) {
           console.error('Error updating task status:', serverError);
           // Revert local state if server update fails
@@ -234,6 +270,8 @@ const TaskDashboard = ({ user, onLogout }) => {
               // Delete task using API service
         try {
           await apiService.deleteTask(taskId, user.id);
+          setSuccess('Task đã được xóa thành công!');
+          setTimeout(() => setSuccess(null), 2000);
         } catch (serverError) {
           console.error('Error deleting task:', serverError);
           // Revert local state if server delete fails
@@ -394,11 +432,14 @@ const TaskDashboard = ({ user, onLogout }) => {
         newPassword: '',
         confirmPassword: ''
       });
-      setShowChangePasswordModal(false);
       setError(null);
+      setSuccess('Đổi mật khẩu thành công!');
       
-      // Show success message
-      alert('Đổi mật khẩu thành công!');
+      // Auto-hide success message after 3 seconds
+      setTimeout(() => {
+        setSuccess(null);
+        setShowChangePasswordModal(false);
+      }, 3000);
     } catch (err) {
       console.error('Error changing password:', err);
       setError(err.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.');
@@ -724,6 +765,26 @@ const TaskDashboard = ({ user, onLogout }) => {
                </button>
              </div>
             
+            {/* Error Display - Inside Modal */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/20 backdrop-blur-xl border border-red-400/30 rounded-xl">
+                <div className="flex items-center">
+                  <AlertCircle className="h-5 w-5 text-red-400 mr-2" />
+                  <p className="text-red-200 text-sm">{error}</p>
+                </div>
+              </div>
+            )}
+            
+            {/* Success Display - Inside Modal */}
+            {success && (
+              <div className="mb-4 p-3 bg-green-500/20 backdrop-blur-xl border border-green-400/30 rounded-xl">
+                <div className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
+                  <p className="text-green-200 text-sm">{success}</p>
+                </div>
+              </div>
+            )}
+            
             <form onSubmit={handleCreateTask} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -856,6 +917,26 @@ const TaskDashboard = ({ user, onLogout }) => {
                 ✕
               </button>
             </div>
+            
+            {/* Error Display - Inside Modal */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/20 backdrop-blur-xl border border-red-400/30 rounded-xl">
+                <div className="flex items-center">
+                  <AlertCircle className="h-5 w-5 text-red-400 mr-2" />
+                  <p className="text-red-200 text-sm">{error}</p>
+                </div>
+              </div>
+            )}
+            
+            {/* Success Display - Inside Modal */}
+            {success && (
+              <div className="mb-4 p-3 bg-green-500/20 backdrop-blur-xl border border-green-400/30 rounded-xl">
+                <div className="flex items-center">
+                  <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
+                  <p className="text-green-200 text-sm">{success}</p>
+                </div>
+              </div>
+            )}
             
             <form onSubmit={handleChangePassword} className="space-y-4">
               <div>
