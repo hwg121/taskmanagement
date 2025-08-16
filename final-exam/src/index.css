@@ -1,3 +1,12 @@
+/* Force dark background globally */
+body, html, #root {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
+  background-color: #0f172a !important;
+  min-height: 100vh !important;
+}
+
 /* tailwind.css */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
@@ -172,6 +181,28 @@ button:active {
 
 /* Mobile responsive improvements */
 @media (max-width: 480px) {
+  /* Force dark background on mobile */
+  body, html, #root, .app, .main-content {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
+    background-color: #0f172a !important;
+  }
+  
+  /* Override any light backgrounds */
+  .bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100 {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+  
+  /* Force dark theme on all elements */
+  * {
+    background-color: transparent !important;
+  }
+  
+  /* Ensure main content area is dark */
+  .max-w-7xl, .container, .main-content {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
   /* Force mobile layout with !important */
   * {
     box-sizing: border-box !important;
@@ -448,6 +479,17 @@ button:active {
 
 /* Landscape mobile */
 @media (max-width: 768px) and (orientation: landscape) {
+  /* Force dark background even in landscape */
+  body, html, #root, .app, .main-content {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
+    background-color: #0f172a !important;
+  }
+  
+  /* Override any light backgrounds */
+  .bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100 {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
   /* Force mobile layout even in landscape */
   .grid,
   [class*="grid-cols"] {
@@ -500,6 +542,17 @@ button:active {
 
 /* Tablet responsive */
 @media (min-width: 481px) and (max-width: 768px) {
+  /* Force dark background on tablet */
+  body, html, #root, .app, .main-content {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
+    background-color: #0f172a !important;
+  }
+  
+  /* Override any light backgrounds */
+  .bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100 {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
   .max-w-7xl {
     padding-left: 1rem !important;
     padding-right: 1rem !important;

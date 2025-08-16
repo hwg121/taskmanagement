@@ -1,6 +1,6 @@
 .app {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
 }
 
 .main-content {
@@ -118,6 +118,21 @@
 
 /* Ultra mobile responsive - Force mobile layout */
 @media (max-width: 640px) {
+  /* Force dark background on mobile */
+  body, html, #root, .app {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
+    background-color: #0f172a !important;
+  }
+  
+  /* Override any white backgrounds */
+  * {
+    background-color: transparent !important;
+  }
+  
+  /* Ensure dark theme on mobile */
+  .bg-white, .bg-gray-50, .bg-gray-100 {
+    background-color: transparent !important;
+  }
   /* Force single column layout */
   .grid {
     grid-template-columns: 1fr !important;
