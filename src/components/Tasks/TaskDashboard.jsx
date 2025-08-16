@@ -9,16 +9,16 @@ import {
   Edit3, 
   AlertCircle,
   CheckCircle,
-  Target,
-  TrendingUp,
-  Flag,
+  // Target, - will be used later for task management
+  // TrendingUp, - will be used later for task management
+  // Flag, - will be used later for task management
   Calendar,
   BarChart3,
   Filter,
   Key,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown
+  // ArrowUpDown, - will be used later for task management
+  // ArrowUp, - will be used later for task management
+  // ArrowDown - will be used later for task management
 } from 'lucide-react';
 import CalendarComponent from '../UI/Calendar';
 import CircularChart from '../UI/CircularChart';
@@ -41,7 +41,9 @@ const TaskDashboard = ({ user, onLogout }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   
   // Sorting states
+  // eslint-disable-next-line no-unused-vars
   const [sortField, setSortField] = useState('dueDate'); // title, priority, status, dueDate, category
+  // eslint-disable-next-line no-unused-vars
   const [sortDirection, setSortDirection] = useState('asc'); // asc, desc
   const [editingTask, setEditingTask] = useState(null);
   
@@ -155,12 +157,7 @@ const TaskDashboard = ({ user, onLogout }) => {
           return;
         }
 
-        const updatedTaskData = {
-          ...editingTask,
-          ...newTask,
-          userId: user.id, // Đảm bảo userId không bị thay đổi
-          updatedAt: new Date().toISOString()
-        };
+        // Task data is prepared in newTask state
 
         // Update task using API service
         try {
@@ -174,13 +171,7 @@ const TaskDashboard = ({ user, onLogout }) => {
 
         setEditingTask(null);
       } else {
-        // Create new task - đảm bảo gán đúng userId
-        const taskData = {
-          ...newTask,
-          userId: user.id, // Gán userId cho task mới
-          id: Date.now(), // Simple ID generation for demo
-          createdAt: new Date().toISOString()
-        };
+        // Create new task - userId will be set by API service
 
         // Create task using API service
         try {
@@ -402,10 +393,7 @@ const TaskDashboard = ({ user, onLogout }) => {
     }
   };
 
-  // Kiểm tra quyền truy cập task
-  const canAccessTask = (task) => {
-    return task && task.userId === user.id;
-  };
+  // Task access control is handled inline where needed
 
   // Handle change password
   const handleChangePassword = async (e) => {

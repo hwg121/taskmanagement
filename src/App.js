@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { CheckSquare, Target, BarChart3, Search, User, Lock, LogIn, Sparkles, Moon, Sun, Star, Zap, Shield, Clock, Eye, EyeOff, Mail } from 'lucide-react';
+import { CheckSquare, Target, BarChart3, User, Lock, LogIn, Sparkles, Star, Zap, Shield, Eye, EyeOff, Mail } from 'lucide-react';
 import TaskManagement from './components/Tasks/TaskManagement';
 import AdminManagement from './components/Admin/AdminManagement';
-import { useDarkMode } from './hooks/useDarkMode';
-import { useTheme } from './hooks/useTheme';
+// Theme hooks - will be implemented later
+// import { useDarkMode } from './hooks/useDarkMode';
+// import { useTheme } from './hooks/useTheme';
 import apiService from './services/api';
 
 function App() {
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
-  const { theme } = useTheme();
+  // Theme hooks - will be used later for theme toggle
+  // const { isDarkMode, toggleDarkMode } = useDarkMode();
+  // const { theme } = useTheme();
   // Authentication state
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -151,7 +153,7 @@ function App() {
       throw new Error('Email không hợp lệ');
     }
     try {
-      const createdUser = await apiService.register(userData.username, userData.email, userData.password, userData.confirmPassword);
+      await apiService.register(userData.username, userData.email, userData.password, userData.confirmPassword);
       setRegisterSuccess(true);
       setRegisterData({ username: '', email: '', password: '', confirmPassword: '' });
       setTimeout(() => {

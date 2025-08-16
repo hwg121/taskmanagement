@@ -17,9 +17,9 @@ import {
   EyeOff,
   Trash2,
   Edit3,
-  Key,
-  Mail,
-  UserPlus,
+  // Key, - will be used later for user management
+  // Mail, - will be used later for user management  
+  // UserPlus, - will be used later for user management
   Search
 } from 'lucide-react';
 
@@ -54,7 +54,9 @@ const AdminDashboard = ({ user, onLogout }) => {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   
   // Sorting states
+  // eslint-disable-next-line no-unused-vars
   const [sortField, setSortField] = useState('username'); // username, email, status, lastActivity
+  // eslint-disable-next-line no-unused-vars
   const [sortDirection, setSortDirection] = useState('asc'); // asc, desc
   
   // Pull to refresh - will be defined after useEffect

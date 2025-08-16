@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from 'react';
 const usePullToRefresh = (onRefresh, threshold = 80) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [startY, setStartY] = useState(0);
+  // currentY is used in handleTouchMove for distance calculation
+  // eslint-disable-next-line no-unused-vars
   const [currentY, setCurrentY] = useState(0);
   const [pullDistance, setPullDistance] = useState(0);
 
