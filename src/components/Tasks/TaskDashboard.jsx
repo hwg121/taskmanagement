@@ -517,8 +517,8 @@ const TaskDashboard = ({ user, onLogout }) => {
        </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
-                 {/* Error Display */}
-         {error && (
+                 {/* Error Display - Only show critical errors that need user action */}
+         {error && error.includes('quyền') && (
            <div className="mb-8 bg-gradient-to-r from-red-500/10 via-red-500/5 to-red-500/10 backdrop-blur-2xl border border-red-500/30 rounded-2xl p-6 shadow-2xl">
              <div className="flex items-center">
                <AlertCircle className="h-6 w-6 text-red-400 mr-3" />
