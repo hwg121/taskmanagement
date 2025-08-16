@@ -298,7 +298,7 @@ const AdminDashboard = ({ user, onLogout }) => {
   const getCardBackground = () => {
     return isDarkMode
       ? 'bg-gradient-to-br from-white/10 via-white/5 to-white/10 border border-white/20'
-      : 'bg-white/80 border border-gray-200';
+      : 'bg-white border border-gray-300 shadow-lg';
   };
 
   // Helper function to get card hover border classes based on theme
@@ -310,7 +310,7 @@ const AdminDashboard = ({ user, onLogout }) => {
 
   // Helper function to get progress bar background based on theme
   const getProgressBarBackground = () => {
-    return isDarkMode ? 'bg-white/10' : 'bg-gray-200';
+    return isDarkMode ? 'bg-white/10' : 'bg-gray-300';
   };
 
   // User management functions
@@ -415,7 +415,7 @@ const AdminDashboard = ({ user, onLogout }) => {
   return (
     <div className={`min-h-screen relative overflow-hidden ${
       isDarkMode 
-        ? 'bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950'
+        ? 'bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900'
         : 'bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50'
     }`}>
       {/* Pull to Refresh Indicator */}
@@ -441,7 +441,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       <header className={`relative backdrop-blur-2xl shadow-2xl ${
         isDarkMode
           ? 'bg-gradient-to-r from-white/10 via-white/5 to-white/10 border-b border-white/20'
-          : 'bg-white/80 border-b border-gray-200'
+          : 'bg-white border-b border-gray-300 shadow-lg'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex justify-between items-center">
@@ -454,10 +454,10 @@ const AdminDashboard = ({ user, onLogout }) => {
                   Admin Dashboard
                 </h1>
                 <p className={`text-xs sm:text-sm font-medium ${
-                  isDarkMode ? 'text-red-200' : 'text-gray-600'
+                  isDarkMode ? 'text-red-200' : 'text-gray-800'
                 }`}>Quản lý hệ thống</p>
                 <p className={`text-xs font-medium mt-1 ${
-                  isDarkMode ? 'text-red-300' : 'text-gray-700'
+                  isDarkMode ? 'text-red-300' : 'text-gray-900'
                 }`}>Admin: {user?.username}</p>
               </div>
             </div>
@@ -465,10 +465,10 @@ const AdminDashboard = ({ user, onLogout }) => {
               <ThemeToggle />
               <div className="text-center sm:text-right">
                 <p className={`text-xs sm:text-sm font-medium ${
-                  isDarkMode ? 'text-red-200' : 'text-gray-600'
+                  isDarkMode ? 'text-red-200' : 'text-gray-800'
                 }`}>Xin chào,</p>
                 <p className={`font-semibold text-base sm:text-lg ${
-                  isDarkMode ? 'text-white' : 'text-gray-800'
+                  isDarkMode ? 'text-white' : 'text-gray-900'
                 }`}>{user?.username}</p>
               </div>
               <button
@@ -493,7 +493,7 @@ const AdminDashboard = ({ user, onLogout }) => {
               </div>
               <div className="text-right">
                 <p className={`text-xs font-medium ${
-                  isDarkMode ? 'text-blue-200' : 'text-gray-600'
+                  isDarkMode ? 'text-blue-200' : 'text-gray-800'
                 }`}>CPU Usage</p>
                 <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.cpuUsage)} transition-all duration-300`}>
                   {systemStats.cpuUsage}%
@@ -519,7 +519,7 @@ const AdminDashboard = ({ user, onLogout }) => {
               </div>
               <div className="text-right">
                 <p className={`text-xs font-medium ${
-                  isDarkMode ? 'text-green-200' : 'text-gray-600'
+                  isDarkMode ? 'text-green-200' : 'text-gray-800'
                 }`}>RAM Usage</p>
                 <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.ramUsage)} transition-all duration-300`}>
                   {systemStats.ramUsage}%
