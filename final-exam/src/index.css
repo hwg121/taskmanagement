@@ -225,6 +225,75 @@ button:active {
   .space-y-2 > * + * {
     margin-top: 0.5rem !important;
   }
+  
+  /* Fix mobile layout issues */
+  .max-w-7xl {
+    max-width: 100% !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  /* Fix grid columns on mobile */
+  .grid-cols-1 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .sm\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .lg\:grid-cols-3 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .lg\:grid-cols-4 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Fix flexbox issues */
+  .flex {
+    flex-direction: column !important;
+  }
+  
+  .flex-row {
+    flex-direction: row !important;
+  }
+  
+  /* Fix text alignment */
+  .text-center {
+    text-align: center !important;
+  }
+  
+  /* Fix padding issues */
+  .px-6 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .py-8 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  /* Fix margin issues */
+  .mx-auto {
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important;
+  }
+  
+  /* Fix overflow issues */
+  .overflow-hidden {
+    overflow: visible !important;
+  }
+  
+  /* Fix position issues */
+  .relative {
+    position: relative !important;
+  }
+  
+  .absolute {
+    position: absolute !important;
+  }
 }
 
 /* Extra small mobile */
@@ -250,6 +319,17 @@ button:active {
     padding: 0.4rem !important;
     font-size: 0.8rem !important;
   }
+  
+  /* Fix very small screens */
+  .max-w-7xl {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+  
+  .px-6 {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
 }
 
 /* Landscape mobile */
@@ -267,6 +347,97 @@ button:active {
   .py-4 {
     padding-top: 0.5rem !important;
     padding-bottom: 0.5rem !important;
+  }
+  
+  /* Fix landscape layout */
+  .flex {
+    flex-direction: row !important;
+  }
+  
+  .grid-cols-1 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Tablet responsive */
+@media (min-width: 481px) and (max-width: 768px) {
+  .max-w-7xl {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .px-6 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .py-8 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  
+  /* Fix tablet grid */
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Fix specific mobile issues */
+@media (max-width: 768px) {
+  /* Fix header layout */
+  header .flex {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  header .text-right {
+    text-align: center !important;
+  }
+  
+  /* Fix dashboard cards */
+  .bg-gradient-to-br {
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Fix user management */
+  .lg\:col-span-1,
+  .lg\:col-span-2,
+  .lg\:col-span-3 {
+    grid-column: span 1 !important;
+  }
+  
+  /* Fix search bar */
+  .relative {
+    position: relative !important;
+  }
+  
+  /* Fix modals */
+  .fixed {
+    position: fixed !important;
+  }
+  
+  .max-w-md {
+    max-width: 95% !important;
+    margin: 0 0.5rem !important;
+  }
+  
+  /* Fix buttons */
+  .px-6 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .py-3 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
   }
 }
 

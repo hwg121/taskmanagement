@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Users, 
   Activity, 
@@ -25,6 +25,10 @@ import {
 
 // Import API service
 import apiService from '../../services/api.js';
+import useDebounce from '../../hooks/useDebounce.js';
+import SkeletonLoading from '../UI/SkeletonLoading.jsx';
+import PullToRefreshIndicator from '../UI/PullToRefreshIndicator.jsx';
+import usePullToRefresh from '../../hooks/usePullToRefresh.js';
 
 const AdminDashboard = ({ user, onLogout }) => {
   const [systemStats, setSystemStats] = useState({
@@ -43,11 +47,25 @@ const AdminDashboard = ({ user, onLogout }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  
+  // Debounced search - delay 500ms
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  
+  // Sorting states
+  const [sortField, setSortField] = useState('username'); // username, email, status, lastActivity
+  const [sortDirection, setSortDirection] = useState('asc'); // asc, desc
+  
+  // Pull to refresh - will be defined after useEffect
+  const [refreshData, setRefreshData] = useState(null);
+  
+  const { isRefreshing, pullProgress } = usePullToRefresh(refreshData || (() => Promise.resolve()));
 
   // Fetch real system stats
   useEffect(() => {
     const fetchSystemStats = async () => {
       try {
+        setLoading(true);
         const stats = await apiService.getSystemStats();
         console.log('System stats received:', stats); // Debug log
         setSystemStats({
@@ -61,6 +79,8 @@ const AdminDashboard = ({ user, onLogout }) => {
         // Không có dữ liệu ảo, chỉ hiển thị thông báo lỗi
         setSystemStats(null);
         setError('Không thể tải thống kê hệ thống. Vui lòng thử lại.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -70,9 +90,76 @@ const AdminDashboard = ({ user, onLogout }) => {
     // Update every 5 seconds
     const interval = setInterval(fetchSystemStats, 5000);
     
-    return () => clearInterval(interval);
+        return () => clearInterval(interval);
   }, []);
-
+  
+  // Define refreshData after all fetch functions are available
+  useEffect(() => {
+    const refreshAllData = async () => {
+      try {
+        setLoading(true);
+        await Promise.all([
+          // Refresh system stats
+          (async () => {
+            const stats = await apiService.getSystemStats();
+            setSystemStats({
+              cpuUsage: stats.cpuUsage || 0,
+              ramUsage: stats.ramUsage || 0,
+              diskUsage: stats.diskUsage || 0,
+              networkUsage: stats.networkUsage || 0
+            });
+          })(),
+          // Refresh users
+          (async () => {
+            const users = await apiService.getUsers();
+            const usersWithStatus = users.map(user => {
+              const lastLoginTime = user.lastLogin ? new Date(user.lastLogin) : null;
+              const now = new Date();
+              const timeDiff = lastLoginTime ? (now - lastLoginTime) / (1000 * 60) : null;
+              
+              let status = 'offline';
+              if (timeDiff !== null) {
+                if (timeDiff < 10) status = 'online';
+                else if (timeDiff < 60) status = 'idle';
+                else status = 'offline';
+              }
+              
+              return {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                password: user.password,
+                status: status,
+                lastActivity: user.lastLogin ? formatTimeAgo(new Date(user.lastLogin)) : 'Chưa đăng nhập',
+                ip: user.ip || 'N/A'
+              };
+            });
+            setOnlineUsers(usersWithStatus);
+          })(),
+          // Refresh activities
+          (async () => {
+            const activities = await apiService.getActivities();
+            const transformedActivities = activities.map(activity => ({
+              id: activity.id,
+              user: activity.username,
+              action: activity.action,
+              time: formatTimeAgo(new Date(activity.timestamp)),
+              type: activity.type
+            }));
+            setRecentActivity(transformedActivities);
+          })()
+        ]);
+      } catch (error) {
+        console.error('Error refreshing data:', error);
+        setError('Không thể làm mới dữ liệu. Vui lòng thử lại.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    setRefreshData(() => refreshAllData);
+  }, []);
+  
   // Fetch real online users data
   useEffect(() => {
     const fetchOnlineUsers = async () => {
@@ -230,12 +317,64 @@ const AdminDashboard = ({ user, onLogout }) => {
     }
   };
 
-  const filteredUsers = onlineUsers.filter(user =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter and sort users based on debounced search term and sorting
+  const filteredUsers = useMemo(() => {
+    let users = onlineUsers;
+    
+    // Apply search filter
+    if (debouncedSearchTerm) {
+      const searchLower = debouncedSearchTerm.toLowerCase();
+      users = users.filter(user => (
+        user.username.toLowerCase().includes(searchLower) ||
+        user.email.toLowerCase().includes(searchLower) ||
+        user.status.toLowerCase().includes(searchLower)
+      ));
+    }
+    
+    // Apply sorting
+    users.sort((a, b) => {
+      let aValue, bValue;
+      
+      switch (sortField) {
+        case 'username':
+          aValue = a.username.toLowerCase();
+          bValue = b.username.toLowerCase();
+          break;
+        case 'email':
+          aValue = a.email.toLowerCase();
+          bValue = b.email.toLowerCase();
+          break;
+        case 'status':
+          aValue = a.status.toLowerCase();
+          bValue = b.status.toLowerCase();
+          break;
+        case 'lastActivity':
+          aValue = new Date(a.lastActivity || 0);
+          bValue = new Date(b.lastActivity || 0);
+          break;
+        default:
+          aValue = a.username.toLowerCase();
+          bValue = b.username.toLowerCase();
+      }
+      
+      if (sortDirection === 'asc') {
+        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+      } else {
+        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+      }
+    });
+    
+    return users;
+  }, [onlineUsers, debouncedSearchTerm, sortField, sortDirection]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 relative overflow-hidden">
+      {/* Pull to Refresh Indicator */}
+      <PullToRefreshIndicator 
+        pullProgress={pullProgress}
+        isRefreshing={isRefreshing}
+        threshold={80}
+      />
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -247,26 +386,26 @@ const AdminDashboard = ({ user, onLogout }) => {
       <header className="relative bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-2xl border-b border-white/20 shadow-2xl">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 rounded-2xl shadow-lg">
-                <Shield className="h-8 w-8 text-white" />
+            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <div className="p-2 sm:p-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 rounded-xl sm:rounded-2xl shadow-lg">
+                <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-red-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+              <div className="text-center sm:text-left">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-red-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                   Admin Dashboard
                 </h1>
-                <p className="text-red-200 text-sm font-medium">Quản lý hệ thống</p>
+                <p className="text-red-200 text-xs sm:text-sm font-medium">Quản lý hệ thống</p>
                 <p className="text-red-300 text-xs font-medium mt-1">Admin: {user?.username}</p>
               </div>
             </div>
-            <div className="flex items-center space-x-6">
-              <div className="text-right">
-                <p className="text-red-200 text-sm font-medium">Xin chào,</p>
-                <p className="text-white font-semibold text-lg">{user?.username}</p>
+            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6">
+              <div className="text-center sm:text-right">
+                <p className="text-red-200 text-xs sm:text-sm font-medium">Xin chào,</p>
+                <p className="text-white font-semibold text-base sm:text-lg">{user?.username}</p>
               </div>
               <button
                 onClick={onLogout}
-                className="px-6 py-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 hover:from-red-600 hover:via-pink-600 hover:to-purple-600 text-white rounded-2xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 hover:from-red-600 hover:via-pink-600 hover:to-purple-600 text-white rounded-xl sm:rounded-2xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20 text-sm sm:text-base"
               >
                 Đăng xuất
               </button>
@@ -420,11 +559,19 @@ const AdminDashboard = ({ user, onLogout }) => {
                    <span className="px-3 py-1 bg-gradient-to-r from-blue-500/30 to-indigo-500/30 text-blue-300 text-sm rounded-full border border-blue-500/30">
                      {onlineUsers.filter(u => u.status === 'online').length} online
                    </span>
+                   {/* Search results count */}
+                   {debouncedSearchTerm && (
+                     <span className="px-3 py-1 bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-300 text-sm rounded-full border border-green-500/30">
+                       {filteredUsers.length} kết quả
+                     </span>
+                   )}
                  </div>
                </div>
 
                              <div className="space-y-3 max-h-96 overflow-y-auto">
-                 {filteredUsers.map((user) => (
+                 {loading ? (
+                   <SkeletonLoading type="user" count={3} />
+                 ) : filteredUsers.map((user) => (
                    <div key={user.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300">
                      <div className="flex items-center space-x-3">
                        <div className={`w-3 h-3 rounded-full ${
@@ -473,13 +620,39 @@ const AdminDashboard = ({ user, onLogout }) => {
                  <div className="mt-4">
                    <div className="relative">
                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
+                     {/* Search loading indicator */}
+                     {searchTerm !== debouncedSearchTerm && (
+                       <div className="absolute left-8 top-1/2 transform -translate-y-1/2">
+                         <div className="w-3 h-3 border-2 border-yellow-400/50 border-t-yellow-400 rounded-full animate-spin"></div>
+                       </div>
+                     )}
                                      <input
                   type="text"
-                  placeholder="Tìm kiếm user..."
+                  placeholder={searchTerm !== debouncedSearchTerm ? "Đang tìm kiếm..." : "Tìm kiếm user..."}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-blue-500/50 transition-all duration-300 text-sm sm:text-base"
+                  className={`w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 bg-white/10 border rounded-lg text-white placeholder-white/60 focus:outline-none transition-all duration-300 text-sm sm:text-base ${
+                    searchTerm !== debouncedSearchTerm 
+                      ? 'border-yellow-400/50 bg-yellow-500/5' 
+                      : 'border-white/20 focus:border-blue-500/50'
+                  }`}
                 />
+                {/* Search indicator and clear button */}
+                {searchTerm !== debouncedSearchTerm && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                  </div>
+                )}
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white/60 transition-colors"
+                    title="Xóa tìm kiếm"
+                  >
+                    ✕
+                  </button>
+                )}
                    </div>
                  </div>
                )}

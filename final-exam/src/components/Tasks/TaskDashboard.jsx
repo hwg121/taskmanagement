@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   Plus, 
   Search, 
@@ -14,11 +14,18 @@ import {
   Calendar,
   BarChart3,
   Filter,
-  Key
+  Key,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 import CalendarComponent from '../UI/Calendar';
 import CircularChart from '../UI/CircularChart';
+import SkeletonLoading from '../UI/SkeletonLoading';
+import PullToRefreshIndicator from '../UI/PullToRefreshIndicator';
 import apiService from '../../services/api';
+import useDebounce from '../../hooks/useDebounce';
+import usePullToRefresh from '../../hooks/usePullToRefresh';
 
 // Sử dụng apiService thay vì fetchWithTimeout
 
@@ -30,7 +37,17 @@ const TaskDashboard = ({ user, onLogout }) => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  
+  // Sorting states
+  const [sortField, setSortField] = useState('dueDate'); // title, priority, status, dueDate, category
+  const [sortDirection, setSortDirection] = useState('asc'); // asc, desc
   const [editingTask, setEditingTask] = useState(null);
+  
+  // Pull to refresh
+  const { isRefreshing, pullProgress } = usePullToRefresh(loadTasks);
+  
+  // Debounced search - delay 500ms
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   
   // New task form state
@@ -220,20 +237,65 @@ const TaskDashboard = ({ user, onLogout }) => {
     }
   };
 
-  // Filter tasks - chỉ lọc task của user hiện tại
-  const filteredTasks = tasks.filter(task => {
-    // Đảm bảo chỉ hiển thị task của user hiện tại
-    if (task.userId !== user.id) {
-      return false;
-    }
+  // Filter and sort tasks - chỉ lọc task của user hiện tại
+  const filteredTasks = useMemo(() => {
+    let filtered = tasks.filter(task => {
+      // Đảm bảo chỉ hiển thị task của user hiện tại
+      if (task.userId !== user.id) {
+        return false;
+      }
+      
+      const matchesSearch = debouncedSearchTerm ? (
+        task.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        task.description.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+      ) : true;
+      const matchesStatus = filterStatus === 'all' || task.status === filterStatus;
+      const matchesPriority = filterPriority === 'all' || task.priority === filterPriority;
+      
+      return matchesSearch && matchesStatus && matchesPriority;
+    });
     
-    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         task.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || task.status === filterStatus;
-    const matchesPriority = filterPriority === 'all' || task.priority === filterPriority;
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let aValue, bValue;
+      
+      switch (sortField) {
+        case 'title':
+          aValue = a.title.toLowerCase();
+          bValue = b.title.toLowerCase();
+          break;
+        case 'priority':
+          const priorityOrder = { high: 3, medium: 2, low: 1 };
+          aValue = priorityOrder[a.priority] || 0;
+          bValue = priorityOrder[b.priority] || 0;
+          break;
+        case 'status':
+          const statusOrder = { 'todo': 1, 'in-progress': 2, 'completed': 3 };
+          aValue = statusOrder[a.status] || 0;
+          bValue = statusOrder[b.status] || 0;
+          break;
+        case 'dueDate':
+          aValue = new Date(a.dueDate || '9999-12-31');
+          bValue = new Date(b.dueDate || '9999-12-31');
+          break;
+        case 'category':
+          aValue = a.category.toLowerCase();
+          bValue = b.category.toLowerCase();
+          break;
+        default:
+          aValue = new Date(a.dueDate || '9999-12-31');
+          bValue = new Date(b.dueDate || '9999-12-31');
+      }
+      
+      if (sortDirection === 'asc') {
+        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+      } else {
+        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+      }
+    });
     
-    return matchesSearch && matchesStatus && matchesPriority;
-  });
+    return filtered;
+  }, [tasks, user.id, debouncedSearchTerm, filterStatus, filterPriority, sortField, sortDirection]);
 
   // Calculate statistics
   const stats = {
@@ -352,8 +414,14 @@ const TaskDashboard = ({ user, onLogout }) => {
      );
    }
 
-     return (
-     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 relative overflow-hidden">
+       return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 relative overflow-hidden">
+      {/* Pull to Refresh Indicator */}
+      <PullToRefreshIndicator 
+        pullProgress={pullProgress}
+        isRefreshing={isRefreshing}
+        threshold={80}
+      />
        {/* Animated Background Elements */}
        <div className="absolute inset-0 overflow-hidden">
          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -363,7 +431,7 @@ const TaskDashboard = ({ user, onLogout }) => {
        
        {/* Header */}
        <header className="relative bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-2xl border-b border-white/20 shadow-2xl">
-         <div className="max-w-7xl mx-auto px-6 py-4">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
            <div className="flex justify-between items-center">
              <div className="flex items-center space-x-4">
                <div className="p-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-2xl shadow-lg">
@@ -399,7 +467,7 @@ const TaskDashboard = ({ user, onLogout }) => {
          </div>
        </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
                  {/* Error Display */}
          {error && (
            <div className="mb-8 bg-gradient-to-r from-red-500/10 via-red-500/5 to-red-500/10 backdrop-blur-2xl border border-red-500/30 rounded-2xl p-6 shadow-2xl">
@@ -422,11 +490,11 @@ const TaskDashboard = ({ user, onLogout }) => {
          )}
 
         {/* Main Layout - 3 Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
                      {/* Left Column - Summary & Controls */}
-           <div className="lg:col-span-3 space-y-6">
+           <div className="lg:col-span-3 space-y-4 sm:space-y-6">
              {/* Summary Chart */}
-             <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 p-6 shadow-lg">
+             <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl rounded-xl sm:rounded-2xl border border-white/20 p-4 sm:p-6 shadow-lg">
                <h3 className="text-white font-semibold mb-4 flex items-center">
                  <BarChart3 className="h-5 w-5 mr-2 text-blue-400" />
                  Tổng quan
@@ -467,7 +535,7 @@ const TaskDashboard = ({ user, onLogout }) => {
              </div>
 
                          {/* Search & Filter Section */}
-             <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-6 rounded-2xl border border-white/20 shadow-lg">
+             <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 shadow-lg">
                <h3 className="text-white font-semibold mb-4 flex items-center">
                  <Filter className="h-5 w-5 mr-2 text-blue-400" />
                  Tìm kiếm & Lọc
@@ -538,15 +606,17 @@ const TaskDashboard = ({ user, onLogout }) => {
                   <p className="text-white/60 text-sm mt-1">Hiển thị task của {user.username} (ID: {user.id})</p>
                </div>
 
-                             {filteredTasks.length === 0 ? (
-                 <div className="p-12 text-center">
-                   <div className="w-20 h-20 bg-gradient-to-br from-white/10 to-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/20">
-                     <Square className="h-10 w-10 text-white/50" />
-                   </div>
-                   <h3 className="text-xl font-medium text-white/70 mb-2">Không có task nào</h3>
-                   <p className="text-white/50">Bắt đầu bằng cách tạo task mới</p>
-                 </div>
-               ) : (
+                             {loading ? (
+                <SkeletonLoading type="task" count={3} />
+              ) : filteredTasks.length === 0 ? (
+                <div className="p-12 text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-white/10 to-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/20">
+                    <Square className="h-10 w-10 text-white/50" />
+                  </div>
+                  <h3 className="text-xl font-medium text-white/70 mb-2">Không có task nào</h3>
+                  <p className="text-white/50">Bắt đầu bằng cách tạo task mới</p>
+                </div>
+              ) : (
                 <div className="divide-y divide-white/10">
                                      {filteredTasks.map(task => (
                      <div key={task.id} className="p-6 hover:bg-white/10 transition-all duration-300 group border-l-4 border-transparent hover:border-blue-500/30">
