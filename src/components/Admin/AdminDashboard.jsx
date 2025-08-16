@@ -35,7 +35,8 @@ const AdminDashboard = ({ user, onLogout }) => {
     cpuUsage: 0,
     ramUsage: 0,
     diskUsage: 0,
-    networkUsage: 0
+    networkUsage: 0,
+    lastUpdated: null
   });
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -75,7 +76,8 @@ const AdminDashboard = ({ user, onLogout }) => {
           cpuUsage: stats.cpuUsage || 0,
           ramUsage: stats.ramUsage || 0,
           diskUsage: stats.diskUsage || 0,
-          networkUsage: stats.networkUsage || 0
+          networkUsage: stats.networkUsage || 0,
+          lastUpdated: stats.lastUpdated || new Date().toISOString()
         });
       } catch (error) {
         console.error('Error fetching system stats:', error);
@@ -90,8 +92,8 @@ const AdminDashboard = ({ user, onLogout }) => {
     // Fetch immediately
     fetchSystemStats();
     
-    // Update every 5 seconds
-    const interval = setInterval(fetchSystemStats, 5000);
+    // Update every 2 seconds for more real-time feel
+    const interval = setInterval(fetchSystemStats, 2000);
     
         return () => clearInterval(interval);
   }, []);
@@ -419,50 +421,64 @@ const AdminDashboard = ({ user, onLogout }) => {
         {/* System Overview Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           {/* CPU Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-blue-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
+          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-blue-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl animate-pulse">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-500/30 to-indigo-500/30 rounded-lg sm:rounded-xl group-hover:from-blue-500/40 group-hover:to-indigo-500/40 transition-all duration-300">
                 <Cpu className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
               </div>
               <div className="text-right">
                 <p className="text-blue-200 text-xs font-medium">CPU Usage</p>
-                <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.cpuUsage)}`}>
+                <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.cpuUsage)} transition-all duration-300`}>
                   {systemStats.cpuUsage}%
                 </p>
               </div>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
               <div 
-                className={`h-2 rounded-full transition-all duration-500 ${
+                className={`h-2 rounded-full transition-all duration-700 ease-out ${
                   systemStats.cpuUsage < 50 ? 'bg-green-400' : 
                   systemStats.cpuUsage < 80 ? 'bg-yellow-400' : 'bg-red-400'
                 }`}
                 style={{ width: `${systemStats.cpuUsage}%` }}
               ></div>
             </div>
+            {/* Real-time indicator */}
+            <div className="mt-2 text-center">
+              <div className="inline-flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs text-green-300">Live</span>
+              </div>
+            </div>
           </div>
 
           {/* RAM Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-green-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
+          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-green-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl animate-pulse">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-lg sm:rounded-xl group-hover:from-green-500/40 group-hover:to-emerald-500/40 transition-all duration-300">
                 <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
               </div>
               <div className="text-right">
                 <p className="text-green-200 text-xs font-medium">RAM Usage</p>
-                <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.ramUsage)}`}>
+                <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.ramUsage)} transition-all duration-300`}>
                   {systemStats.ramUsage}%
                 </p>
               </div>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
               <div 
-                className={`h-2 rounded-full transition-all duration-500 ${
+                className={`h-2 rounded-full transition-all duration-700 ease-out ${
                   systemStats.ramUsage < 50 ? 'bg-green-400' : 
                   systemStats.ramUsage < 80 ? 'bg-yellow-400' : 'bg-red-400'
                 }`}
                 style={{ width: `${systemStats.ramUsage}%` }}
               ></div>
+            </div>
+            {/* Real-time indicator */}
+            <div className="mt-2 text-center">
+              <div className="inline-flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs text-green-300">Live</span>
+              </div>
             </div>
           </div>
 
@@ -691,6 +707,17 @@ const AdminDashboard = ({ user, onLogout }) => {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Last Update Info */}
+        <div className="mt-6 text-center">
+          <div className="inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/10">
+            <Clock className="h-4 w-4 text-blue-400" />
+            <span className="text-sm text-gray-300">
+              Cập nhật cuối: {systemStats.lastUpdated ? new Date(systemStats.lastUpdated).toLocaleTimeString('vi-VN') : 'Đang tải...'}
+            </span>
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
           </div>
         </div>
 

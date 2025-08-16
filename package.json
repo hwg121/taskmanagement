@@ -30,6 +30,7 @@
     "test:api": "node scripts/test-api.js",
     "test:stats": "node scripts/test-system-stats.js",
     "test:all": "node scripts/test-all.js",
+    "test:realtime": "node scripts/test-real-time-stats.js",
     "update:stats": "node scripts/update-system-stats.js",
     "reset:stats": "node scripts/reset-system-stats.js"
   },
