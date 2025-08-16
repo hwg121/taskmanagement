@@ -14,7 +14,7 @@ import {
 } from '../utils/validation.js';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://task-management-new-70f78e078f73.herokuapp.com'
+  ? 'https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com'
   : 'http://localhost:3001';
 const FETCH_TIMEOUT = 10000; // Tăng timeout lên 10s
 

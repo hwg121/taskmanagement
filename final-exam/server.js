@@ -16,7 +16,7 @@ app.use(helmet({
 app.use(compression());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://task-management-new-70f78e078f73.herokuapp.com', 'https://taskmanagement-three-gamma.vercel.app'] 
+    ? ['https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com', 'https://taskmanagement-three-gamma.vercel.app'] 
     : ['http://localhost:3000'],
   credentials: true
 }));
