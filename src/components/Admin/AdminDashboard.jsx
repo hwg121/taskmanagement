@@ -269,7 +269,17 @@ const AdminDashboard = ({ user, onLogout }) => {
     const now = new Date();
     const diffInSeconds = Math.floor((now - date) / 1000);
     
-    if (diffInSeconds < 60) return 'Vừa xong';
+    // Hiển thị thời gian cụ thể nếu < 1 phút
+    if (diffInSeconds < 60) {
+      return new Date(date).toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZone: 'Asia/Ho_Chi_Minh'
+      });
+    }
+    
+    // Hiển thị thời gian tương đối nếu > 1 phút
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} phút trước`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} giờ trước`;
     return `${Math.floor(diffInSeconds / 86400)} ngày trước`;
