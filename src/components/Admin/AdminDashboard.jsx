@@ -30,8 +30,11 @@ import useDebounce from '../../hooks/useDebounce.js';
 import SkeletonLoading from '../UI/SkeletonLoading.jsx';
 import PullToRefreshIndicator from '../UI/PullToRefreshIndicator.jsx';
 import usePullToRefresh from '../../hooks/usePullToRefresh.js';
+import ThemeToggle from '../UI/ThemeToggle.jsx';
+import { useTheme } from '../../hooks/useTheme.js';
 
 const AdminDashboard = ({ user, onLogout }) => {
+  const { isDarkMode } = useTheme();
   const [systemStats, setSystemStats] = useState({
     cpuUsage: 0,
     ramUsage: 0,
@@ -291,6 +294,25 @@ const AdminDashboard = ({ user, onLogout }) => {
     return 'text-red-400';
   };
 
+  // Helper function to get card background classes based on theme
+  const getCardBackground = () => {
+    return isDarkMode
+      ? 'bg-gradient-to-br from-white/10 via-white/5 to-white/10 border border-white/20'
+      : 'bg-white/80 border border-gray-200';
+  };
+
+  // Helper function to get card hover border classes based on theme
+  const getCardHoverBorder = (color) => {
+    return isDarkMode
+      ? `hover:border-${color}-500/40`
+      : `hover:border-${color}-400`;
+  };
+
+  // Helper function to get progress bar background based on theme
+  const getProgressBarBackground = () => {
+    return isDarkMode ? 'bg-white/10' : 'bg-gray-200';
+  };
+
   // User management functions
   const handleDeleteUser = async (userId) => {
     try {
@@ -391,7 +413,11 @@ const AdminDashboard = ({ user, onLogout }) => {
   }, [onlineUsers, debouncedSearchTerm, sortField, sortDirection]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden ${
+      isDarkMode 
+        ? 'bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950'
+        : 'bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50'
+    }`}>
       {/* Pull to Refresh Indicator */}
       <PullToRefreshIndicator 
         pullProgress={pullProgress}
@@ -400,13 +426,23 @@ const AdminDashboard = ({ user, onLogout }) => {
       />
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-pink-500/20 to-indigo-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+        <div className={`absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl animate-pulse ${
+          isDarkMode ? 'bg-gradient-to-br from-blue-500/20 to-purple-500/20' : 'bg-gradient-to-br from-blue-500/10 to-purple-500/10'
+        }`}></div>
+        <div className={`absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl animate-pulse delay-1000 ${
+          isDarkMode ? 'bg-gradient-to-tr from-pink-500/20 to-indigo-500/20' : 'bg-gradient-to-tr from-pink-500/10 to-indigo-500/10'
+        }`}></div>
+        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-3xl animate-pulse delay-500 ${
+          isDarkMode ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10' : 'bg-gradient-to-r from-cyan-500/5 to-blue-500/5'
+        }`}></div>
       </div>
       
       {/* Header */}
-      <header className="relative bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-2xl border-b border-white/20 shadow-2xl">
+      <header className={`relative backdrop-blur-2xl shadow-2xl ${
+        isDarkMode
+          ? 'bg-gradient-to-r from-white/10 via-white/5 to-white/10 border-b border-white/20'
+          : 'bg-white/80 border-b border-gray-200'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
@@ -417,14 +453,23 @@ const AdminDashboard = ({ user, onLogout }) => {
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-red-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                   Admin Dashboard
                 </h1>
-                <p className="text-red-200 text-xs sm:text-sm font-medium">Quản lý hệ thống</p>
-                <p className="text-red-300 text-xs font-medium mt-1">Admin: {user?.username}</p>
+                <p className={`text-xs sm:text-sm font-medium ${
+                  isDarkMode ? 'text-red-200' : 'text-gray-600'
+                }`}>Quản lý hệ thống</p>
+                <p className={`text-xs font-medium mt-1 ${
+                  isDarkMode ? 'text-red-300' : 'text-gray-700'
+                }`}>Admin: {user?.username}</p>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6">
+              <ThemeToggle />
               <div className="text-center sm:text-right">
-                <p className="text-red-200 text-xs sm:text-sm font-medium">Xin chào,</p>
-                <p className="text-white font-semibold text-base sm:text-lg">{user?.username}</p>
+                <p className={`text-xs sm:text-sm font-medium ${
+                  isDarkMode ? 'text-red-200' : 'text-gray-600'
+                }`}>Xin chào,</p>
+                <p className={`font-semibold text-base sm:text-lg ${
+                  isDarkMode ? 'text-white' : 'text-gray-800'
+                }`}>{user?.username}</p>
               </div>
               <button
                 onClick={onLogout}
@@ -441,19 +486,21 @@ const AdminDashboard = ({ user, onLogout }) => {
         {/* System Overview Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           {/* CPU Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-blue-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
+          <div className={`backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 group shadow-lg hover:shadow-xl ${getCardBackground()} ${getCardHoverBorder('blue')}`}>
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-500/30 to-indigo-500/30 rounded-lg sm:rounded-xl group-hover:from-blue-500/40 group-hover:to-indigo-500/40 transition-all duration-300">
                 <Cpu className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
               </div>
               <div className="text-right">
-                <p className="text-blue-200 text-xs font-medium">CPU Usage</p>
+                <p className={`text-xs font-medium ${
+                  isDarkMode ? 'text-blue-200' : 'text-gray-600'
+                }`}>CPU Usage</p>
                 <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.cpuUsage)} transition-all duration-300`}>
                   {systemStats.cpuUsage}%
                 </p>
               </div>
             </div>
-            <div className="w-full bg-white/10 rounded-full h-2">
+            <div className={`w-full rounded-full h-2 ${getProgressBarBackground()}`}>
               <div 
                 className={`h-2 rounded-full transition-all duration-700 ease-out ${
                   systemStats.cpuUsage < 50 ? 'bg-green-400' : 
@@ -465,13 +512,15 @@ const AdminDashboard = ({ user, onLogout }) => {
           </div>
 
           {/* RAM Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-green-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
+          <div className={`backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 group shadow-lg hover:shadow-xl ${getCardBackground()} ${getCardHoverBorder('green')}`}>
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-gradient-to-br from-green-500/30 to-emerald-500/40 rounded-lg sm:rounded-xl group-hover:from-green-500/40 group-hover:to-emerald-500/40 transition-all duration-300">
                 <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
               </div>
               <div className="text-right">
-                <p className="text-green-200 text-xs font-medium">RAM Usage</p>
+                <p className={`text-xs font-medium ${
+                  isDarkMode ? 'text-green-200' : 'text-gray-600'
+                }`}>RAM Usage</p>
                 <p className={`text-lg sm:text-2xl font-bold ${getUsageColor(systemStats.ramUsage)} transition-all duration-300`}>
                   {systemStats.ramUsage}%
                 </p>
