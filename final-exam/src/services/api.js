@@ -557,6 +557,24 @@ class ApiService {
       throw errorHandler(error);
     }
   }
+
+  async verifySession(userId, token) {
+    try {
+      // Simple session verification - check if user exists and token is valid
+      const response = await this.fetchWithRetry(`${API_BASE_URL}/users/${userId}`);
+      if (!response.ok) {
+        return false;
+      }
+      
+      const user = await response.json();
+      // For demo purposes, consider any existing user as valid session
+      // In production, you would verify the JWT token
+      return !!user && user.id === userId;
+    } catch (error) {
+      console.error('Session verification error:', error);
+      return false;
+    }
+  }
 }
 
 export default new ApiService();

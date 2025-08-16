@@ -287,13 +287,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       setTimeout(() => setSuccess(null), 2000);
       
       // Log activity
-      await apiService.logActivity({
-        id: Date.now(),
-        username: 'admin',
-        action: `Xóa user ID: ${userId}`,
-        type: 'delete',
-        timestamp: new Date().toISOString()
-      });
+      await apiService.logActivity('admin', `Xóa user ID: ${userId}`, 'delete');
     } catch (error) {
       console.error('Error deleting user:', error);
       setError('Không thể xóa user. Vui lòng thử lại.');
@@ -315,13 +309,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       setTimeout(() => setSuccess(null), 2000);
       
       // Log activity
-      await apiService.logActivity({
-        id: Date.now(),
-        username: 'admin',
-        action: `Cập nhật user: ${updates.username || 'N/A'}`,
-        type: 'update',
-        timestamp: new Date().toISOString()
-      });
+      await apiService.logActivity('admin', `Cập nhật user: ${updates.username || 'N/A'}`, 'update');
     } catch (error) {
       console.error('Error updating user:', error);
       setError('Không thể cập nhật user. Vui lòng thử lại.');
