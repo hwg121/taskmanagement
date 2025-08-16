@@ -170,6 +170,7 @@ const AdminDashboard = ({ user, onLogout }) => {
   useEffect(() => {
     const fetchOnlineUsers = async () => {
       try {
+        setLoading(true);
         const users = await apiService.getUsers();
         // Transform users data to include online status
         const usersWithStatus = users.map(user => {
@@ -203,6 +204,8 @@ const AdminDashboard = ({ user, onLogout }) => {
         // Không có dữ liệu ảo, chỉ hiển thị thông báo lỗi
         setOnlineUsers([]);
         setError('Không thể tải danh sách người dùng. Vui lòng thử lại.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -556,6 +559,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                        // Refresh users list manually
                        const fetchOnlineUsers = async () => {
                          try {
+                           setLoading(true);
                            const users = await apiService.getUsers();
                            const usersWithStatus = users.map(user => {
                              const lastLoginTime = user.lastLogin ? new Date(user.lastLogin) : null;
@@ -585,6 +589,8 @@ const AdminDashboard = ({ user, onLogout }) => {
                          } catch (error) {
                            console.error('Error refreshing users:', error);
                            setError('Không thể cập nhật danh sách người dùng');
+                         } finally {
+                           setLoading(false);
                          }
                        };
                        fetchOnlineUsers();
@@ -620,8 +626,15 @@ const AdminDashboard = ({ user, onLogout }) => {
                </div>
 
                              <div className="space-y-3 max-h-96 overflow-y-auto">
-                 {loading ? (
+                 {loading && onlineUsers.length === 0 ? (
                    <SkeletonLoading type="user" count={3} />
+                 ) : filteredUsers.length === 0 ? (
+                   <div className="text-center py-8">
+                     <Users className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                     <p className="text-gray-400 text-sm">
+                       {debouncedSearchTerm ? 'Không tìm thấy người dùng nào' : 'Không có người dùng nào'}
+                     </p>
+                   </div>
                  ) : filteredUsers.map((user) => (
                    <div key={user.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300">
                      <div className="flex items-center space-x-3">
