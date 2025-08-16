@@ -140,11 +140,11 @@ const AdminDashboard = ({ user, onLogout }) => {
           // Refresh activities
           (async () => {
             const activities = await apiService.getActivities();
-            const transformedActivities = activities.map(activity => ({
-              id: activity.id,
+            const transformedActivities = activities.map((activity, index) => ({
+              id: index + 1, // Generate local ID since server doesn't return id
               user: activity.username,
               action: activity.action,
-              time: formatTimeAgo(new Date(activity.timestamp)),
+              time: 'Gần đây', // Since server doesn't return timestamp, show generic time
               type: activity.type
             }));
             setRecentActivity(transformedActivities);
@@ -175,8 +175,8 @@ const AdminDashboard = ({ user, onLogout }) => {
           
           let status = 'offline';
           if (timeDiff !== null) {
-            if (timeDiff < 10) status = 'online';      // Online if logged in < 10 minutes ago
-            else if (timeDiff < 60) status = 'idle';   // Idle if logged in < 1 hour ago
+            if (timeDiff < 5) status = 'online';      // Online if logged in < 10 minutes ago
+            else if (timeDiff < 10) status = 'idle';   // Idle if logged in < 1 hour ago
             else status = 'offline';                   // Offline if > 1 hour ago
           }
           
@@ -212,12 +212,12 @@ const AdminDashboard = ({ user, onLogout }) => {
     const fetchActivity = async () => {
       try {
         const activities = await apiService.getActivities();
-        // Transform activities data
-        const transformedActivities = activities.map(activity => ({
-          id: activity.id,
+        // Transform activities data - server only returns {username, action, type}
+        const transformedActivities = activities.map((activity, index) => ({
+          id: index + 1, // Generate local ID since server doesn't return id
           user: activity.username,
           action: activity.action,
-          time: formatTimeAgo(new Date(activity.timestamp)),
+          time: 'Gần đây', // Since server doesn't return timestamp, show generic time
           type: activity.type
         }));
         setRecentActivity(transformedActivities);

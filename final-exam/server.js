@@ -329,7 +329,16 @@ app.delete('/tasks/:id', (req, res) => {
 app.get('/activities', (req, res) => {
   const activities = readDb(activitiesPath);
   if (!activities) return res.status(500).json({ error: 'Database error' });
-  res.json(activities || []);
+  
+  // Filter out id and timestamp to prevent React Error #31
+  const safeActivities = (activities || []).map(activity => ({
+    username: activity.username,
+    action: activity.action,
+    type: activity.type
+    // id and timestamp are removed to prevent React Error #31
+  }));
+  
+  res.json(safeActivities);
 });
 
 app.post('/activities', (req, res) => {
