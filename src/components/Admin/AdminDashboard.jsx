@@ -614,7 +614,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                      {showSensitiveData ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                    </button>
                    <span className="px-3 py-1 bg-gradient-to-r from-blue-500/30 to-indigo-500/30 text-blue-300 text-sm rounded-full border border-blue-500/30">
-                     {onlineUsers.filter(u => u.status === 'online').length} online / {onlineUsers.length} total
+                     {onlineUsers.filter(u => u.status === 'online').length} / {onlineUsers.length} total
                    </span>
                    {/* Search results count */}
                    {debouncedSearchTerm && (
