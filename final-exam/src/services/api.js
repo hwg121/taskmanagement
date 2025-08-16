@@ -525,15 +525,18 @@ class ApiService {
 
   async logActivity(username, action, type) {
     try {
+      // Tạo activity data với format đơn giản
+      const activityData = {
+        id: Date.now(),
+        username: username,
+        action: action,
+        type: type,
+        timestamp: new Date().toISOString()
+      };
+      
       await this.fetchWithRetry(`${API_BASE_URL}/activities`, {
         method: 'POST',
-        body: JSON.stringify({
-          id: Date.now(),
-          username: username,
-          action: action,
-          type: type,
-          timestamp: new Date().toISOString()
-        })
+        body: JSON.stringify(activityData)
       });
     } catch (error) {
       console.error('Error logging activity:', error);
