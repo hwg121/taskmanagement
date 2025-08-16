@@ -285,8 +285,10 @@ class ApiService {
       
       const createdTask = await response.json();
       
-      // Log activity
-      await this.logActivity(userId.toString(), `Tạo task mới: ${sanitizedTask.title}`, 'create');
+      // Log activity with username instead of userId
+      const userResponse = await this.fetchWithRetry(`${API_BASE_URL}/users/${userId}`);
+      const user = await userResponse.json();
+      await this.logActivity(user.username, `Tạo task mới: ${sanitizedTask.title}`, 'create');
       
       return createdTask;
     } catch (error) {
@@ -352,8 +354,10 @@ class ApiService {
       
       const updatedTask = await response.json();
       
-      // Log activity
-      await this.logActivity(userId.toString(), `Cập nhật task: ${updatedTask.title}`, 'update');
+      // Log activity with username instead of userId
+      const userResponse = await this.fetchWithRetry(`${API_BASE_URL}/users/${userId}`);
+      const user = await userResponse.json();
+      await this.logActivity(user.username, `Cập nhật task: ${updatedTask.title}`, 'update');
       
       return updatedTask;
     } catch (error) {
@@ -382,8 +386,10 @@ class ApiService {
         throw new AppError('Không thể xóa task', 'DELETE_ERROR');
       }
 
-      // Log activity
-      await this.logActivity(userId.toString(), `Xóa task: ${task.title}`, 'delete');
+      // Log activity with username instead of userId
+      const userResponse = await this.fetchWithRetry(`${API_BASE_URL}/users/${userId}`);
+      const user = await userResponse.json();
+      await this.logActivity(user.username, `Xóa task: ${task.title}`, 'delete');
       
       return { success: true };
     } catch (error) {

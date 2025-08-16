@@ -187,7 +187,7 @@ const generateSystemStats = () => {
   return currentSystemStats;
 };
 
-// Update system stats every 3 seconds for real-time feel
+// Update system stats every 2 seconds to match frontend polling
 const updateSystemStatsInterval = setInterval(() => {
   const newStats = generateSystemStats();
   
@@ -401,11 +401,12 @@ app.get('/activities', (req, res) => {
   const activities = readDb(activitiesPath);
   if (!activities) return res.status(500).json({ error: 'Database error' });
   
-  // Filter out id and timestamp to prevent React Error #31
+  // Return activities with timestamp for proper sorting
   const safeActivities = (activities || []).map(activity => ({
     username: activity.username,
     action: activity.action,
-    type: activity.type
+    type: activity.type,
+    timestamp: activity.timestamp
   }));
   
   res.json(safeActivities);
@@ -483,7 +484,7 @@ const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
-  console.log(`System stats update interval: 3 seconds`);
+  console.log(`System stats update interval: 2 seconds`);
   
   if (process.env.NODE_ENV === 'production') {
     console.log(`Production mode enabled`);

@@ -218,18 +218,20 @@ const AdminDashboard = ({ user, onLogout }) => {
     const fetchActivity = async () => {
       try {
         const activities = await apiService.getActivities();
-        // Transform activities data - server only returns {username, action, type}
-        const transformedActivities = activities.map((activity, index) => ({
-          id: index + 1, // Generate local ID since server doesn't return id
-          user: activity.username,
-          action: activity.action,
-          time: 'Gần đây', // Since server doesn't return timestamp, show generic time
-          type: activity.type
-        }));
+        // Transform activities data with timestamp and sort by newest first
+        const transformedActivities = activities
+          .map((activity, index) => ({
+            id: index + 1,
+            user: activity.username,
+            action: activity.action,
+            time: activity.timestamp ? new Date(activity.timestamp) : new Date(),
+            type: activity.type
+          }))
+          .sort((a, b) => new Date(b.time) - new Date(a.time)); // Sort newest first
+        
         setRecentActivity(transformedActivities);
       } catch (error) {
         console.error('Error fetching activities:', error);
-        // Không có dữ liệu ảo, chỉ hiển thị thông báo lỗi
         setRecentActivity([]);
         setError('Không thể tải hoạt động gần đây. Vui lòng thử lại.');
       }
@@ -748,7 +750,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                       <p className="text-white/70 text-sm">{activity.action}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-white/60 text-xs">{activity.time}</p>
+                      <p className="text-white/60 text-xs">{formatTimeAgo(activity.time)}</p>
                     </div>
                   </div>
                 ))}
@@ -762,7 +764,12 @@ const AdminDashboard = ({ user, onLogout }) => {
           <div className="inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/10">
             <Clock className="h-4 w-4 text-blue-400" />
             <span className="text-sm text-gray-300">
-              Cập nhật cuối: {systemStats.lastUpdated ? new Date(systemStats.lastUpdated).toLocaleTimeString('vi-VN') : 'Đang tải...'}
+              Cập nhật cuối: {systemStats.lastUpdated ? new Date(systemStats.lastUpdated).toLocaleTimeString('vi-VN', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                timeZone: 'Asia/Ho_Chi_Minh'
+              }) : 'Đang tải...'}
             </span>
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
           </div>
