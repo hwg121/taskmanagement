@@ -17,6 +17,7 @@ import {
   EyeOff,
   Trash2,
   Edit3,
+  RefreshCw,
   // Key, - will be used later for user management
   // Mail, - will be used later for user management  
   // UserPlus, - will be used later for user management
@@ -56,7 +57,7 @@ const AdminDashboard = ({ user, onLogout }) => {
   
   // Sorting states
   // eslint-disable-next-line no-unused-vars
-  const [sortField, setSortField] = useState('username'); // username, email, status, lastActivity
+  const [sortField, setSortField] = useState('status'); // username, email, status, lastActivity
   // eslint-disable-next-line no-unused-vars
   const [sortDirection, setSortDirection] = useState('asc'); // asc, desc
   
@@ -165,7 +166,7 @@ const AdminDashboard = ({ user, onLogout }) => {
     setRefreshData(() => refreshAllData);
   }, []);
   
-  // Fetch real online users data
+  // Fetch real online users data - only when needed
   useEffect(() => {
     const fetchOnlineUsers = async () => {
       try {
@@ -205,10 +206,8 @@ const AdminDashboard = ({ user, onLogout }) => {
       }
     };
 
+    // Only fetch once on component mount
     fetchOnlineUsers();
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchOnlineUsers, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   // Fetch real activity data
@@ -334,8 +333,14 @@ const AdminDashboard = ({ user, onLogout }) => {
       ));
     }
     
-    // Apply sorting
+    // Apply sorting - prioritize online status first
     users.sort((a, b) => {
+      // First priority: status (online > idle > offline)
+      const statusOrder = { 'online': 0, 'idle': 1, 'offline': 2 };
+      const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+      if (statusDiff !== 0) return statusDiff;
+      
+      // Second priority: other sorting fields
       let aValue, bValue;
       
       switch (sortField) {
@@ -421,7 +426,7 @@ const AdminDashboard = ({ user, onLogout }) => {
         {/* System Overview Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           {/* CPU Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-blue-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl animate-pulse">
+          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-blue-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-500/30 to-indigo-500/30 rounded-lg sm:rounded-xl group-hover:from-blue-500/40 group-hover:to-indigo-500/40 transition-all duration-300">
                 <Cpu className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
@@ -442,19 +447,12 @@ const AdminDashboard = ({ user, onLogout }) => {
                 style={{ width: `${systemStats.cpuUsage}%` }}
               ></div>
             </div>
-            {/* Real-time indicator */}
-            <div className="mt-2 text-center">
-              <div className="inline-flex items-center space-x-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-green-300">Live</span>
-              </div>
-            </div>
           </div>
 
           {/* RAM Usage */}
-          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-green-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl animate-pulse">
+          <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-2xl p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/20 hover:border-green-500/40 transition-all duration-300 group shadow-lg hover:shadow-xl">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="p-2 sm:p-3 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-lg sm:rounded-xl group-hover:from-green-500/40 group-hover:to-emerald-500/40 transition-all duration-300">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-green-500/30 to-emerald-500/40 rounded-lg sm:rounded-xl group-hover:from-green-500/40 group-hover:to-emerald-500/40 transition-all duration-300">
                 <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
               </div>
               <div className="text-right">
@@ -472,13 +470,6 @@ const AdminDashboard = ({ user, onLogout }) => {
                 }`}
                 style={{ width: `${systemStats.ramUsage}%` }}
               ></div>
-            </div>
-            {/* Real-time indicator */}
-            <div className="mt-2 text-center">
-              <div className="inline-flex items-center space-x-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-green-300">Live</span>
-              </div>
             </div>
           </div>
 
@@ -557,9 +548,52 @@ const AdminDashboard = ({ user, onLogout }) => {
                <div className="flex items-center justify-between mb-6">
                  <h2 className="text-xl font-bold text-white flex items-center">
                    <Users className="h-6 w-6 mr-3 text-blue-400" />
-                   Người dùng online
+                   Danh sách người dùng
                  </h2>
                  <div className="flex items-center space-x-2">
+                   <button
+                     onClick={() => {
+                       // Refresh users list manually
+                       const fetchOnlineUsers = async () => {
+                         try {
+                           const users = await apiService.getUsers();
+                           const usersWithStatus = users.map(user => {
+                             const lastLoginTime = user.lastLogin ? new Date(user.lastLogin) : null;
+                             const now = new Date();
+                             const timeDiff = lastLoginTime ? (now - lastLoginTime) / (1000 * 60) : null;
+                             
+                             let status = 'offline';
+                             if (timeDiff !== null) {
+                               if (timeDiff < 10) status = 'online';
+                               else if (timeDiff < 60) status = 'idle';
+                               else status = 'offline';
+                             }
+                             
+                             return {
+                               id: user.id,
+                               username: user.username,
+                               email: user.email,
+                               password: user.password,
+                               status: status,
+                               lastActivity: user.lastLogin ? formatTimeAgo(new Date(user.lastLogin)) : 'Chưa đăng nhập',
+                               ip: user.ip || 'N/A'
+                             };
+                           });
+                           setOnlineUsers(usersWithStatus);
+                           setSuccess('Đã cập nhật danh sách người dùng');
+                           setTimeout(() => setSuccess(null), 3000);
+                         } catch (error) {
+                           console.error('Error refreshing users:', error);
+                           setError('Không thể cập nhật danh sách người dùng');
+                         }
+                       };
+                       fetchOnlineUsers();
+                     }}
+                     className="p-2 hover:bg-green-500/20 rounded-lg text-green-400 hover:text-green-300 transition-all duration-300"
+                     title="Cập nhật danh sách người dùng"
+                   >
+                     <RefreshCw className="h-4 w-4" />
+                   </button>
                    <button
                      onClick={() => setShowUserManagement(!showUserManagement)}
                      className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white transition-all duration-300"
@@ -574,7 +608,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                      {showSensitiveData ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                    </button>
                    <span className="px-3 py-1 bg-gradient-to-r from-blue-500/30 to-indigo-500/30 text-blue-300 text-sm rounded-full border border-blue-500/30">
-                     {onlineUsers.filter(u => u.status === 'online').length} online
+                     {onlineUsers.filter(u => u.status === 'online').length} online / {onlineUsers.length} total
                    </span>
                    {/* Search results count */}
                    {debouncedSearchTerm && (
