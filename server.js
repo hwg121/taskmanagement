@@ -204,7 +204,7 @@ const updateSystemStatsInterval = setInterval(() => {
   }
   
   console.log(`System stats updated: CPU: ${newStats.cpuUsage}%, RAM: ${newStats.ramUsage}%, Disk: ${newStats.diskUsage}%, Network: ${newStats.networkUsage}%`);
-}, 3000);
+}, 2000);
 
 // Helper function to read database
 const readDb = (filePath) => {
