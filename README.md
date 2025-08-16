@@ -8,13 +8,13 @@ Một hệ thống quản lý task hiện đại với giao diện đẹp mắt,
 **URL:** https://taskmanagement-three-gamma.vercel.app
 
 ### Backend (Heroku)
-**URL:** https://task-management-new-70f78e078f73.herokuapp.com
+**URL:** https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com
 
 **API Endpoints:**
-- Health Check: https://task-management-new-70f78e078f73.herokuapp.com/health
-- Users: https://task-management-new-70f78e078f73.herokuapp.com/users
-- Tasks: https://task-management-new-70f78e078f73.herokuapp.com/tasks
-- System Stats: https://task-management-new-70f78e078f73.herokuapp.com/system-stats
+- Health Check: https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com/health
+- Users: https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com/users
+- Tasks: https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com/tasks
+- System Stats: https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com/system-stats
 
 ## ✨ Tính năng chính
 
@@ -87,7 +87,7 @@ Một hệ thống quản lý task hiện đại với giao diện đẹp mắt,
 ### Bước 1: Clone repository
 ```bash
 git clone https://github.com/hwg121/taskmanagement.git
-cd final-exam
+cd taskmanagement
 ```
 
 ### Bước 2: Cài đặt dependencies
@@ -166,7 +166,7 @@ npm run updater:activity
 ## 📁 Cấu trúc dự án
 
 ```
-final-exam/
+taskmanagement/
 ├── src/
 │   ├── components/
 │   │   ├── Admin/           # Admin dashboard components
@@ -343,6 +343,9 @@ curl http://localhost:3001/system-stats
 # Check activities
 curl http://localhost:3001/activities
 
+# Check production backend
+curl https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com/health
+
 # View logs
 npm run test:all
 ```
@@ -350,7 +353,7 @@ npm run test:all
 ### Production Debug Commands
 ```bash
 # Check Heroku backend health
-curl https://task-management-new-70f78e078f73.herokuapp.com/health
+curl https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com/health
 
 # Check Heroku logs
 heroku logs --tail
@@ -367,12 +370,12 @@ heroku logs --tail
 3. **Output Directory:** `build`
 4. **Environment Variables:**
    - `NODE_ENV=production`
-   - `REACT_APP_API_URL=https://task-management-new-70f78e078f73.herokuapp.com`
+   - `REACT_APP_API_URL=https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com`
 
 ### Backend Deployment (Heroku)
 1. **Create Heroku App:**
    ```bash
-   heroku create task-management-new-70f78e078f73
+   heroku create task-management-backend-2025
    ```
 
 2. **Set Environment Variables:**
@@ -397,7 +400,12 @@ npm run build
 ### Environment Variables
 Tạo file `.env` trong root directory:
 ```env
+# Development
 REACT_APP_API_URL=http://localhost:3001
+REACT_APP_ENV=development
+
+# Production
+REACT_APP_API_URL=https://task-management-backend-2025-ebb92e46bb7f.herokuapp.com
 REACT_APP_ENV=production
 ```
 
