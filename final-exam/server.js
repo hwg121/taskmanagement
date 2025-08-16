@@ -344,7 +344,11 @@ app.post('/activities', (req, res) => {
   activities.push(newActivity);
   
   if (writeDb(activitiesPath, activities)) {
-    res.status(201).json(newActivity);
+    // Chỉ trả về success message, không trả về object để tránh React Error #31
+    res.status(201).json({ 
+      success: true, 
+      message: 'Activity logged successfully' 
+    });
   } else {
     res.status(500).json({ error: 'Failed to save activity' });
   }
