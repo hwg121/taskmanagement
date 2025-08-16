@@ -172,6 +172,83 @@ button:active {
 
 /* Mobile responsive improvements */
 @media (max-width: 480px) {
+  /* Force mobile layout with !important */
+  * {
+    box-sizing: border-box !important;
+  }
+  
+  /* Override all grid layouts */
+  .grid,
+  [class*="grid-cols"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Force single column */
+  .grid-cols-1,
+  .sm\:grid-cols-2,
+  .md\:grid-cols-2,
+  .lg\:grid-cols-2,
+  .lg\:grid-cols-3,
+  .lg\:grid-cols-4,
+  .lg\:grid-cols-12 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Force vertical layout */
+  .flex-row,
+  .sm\:flex-row,
+  .md\:flex-row,
+  .lg\:flex-row {
+    flex-direction: column !important;
+  }
+  
+  /* Fix max-width issues */
+  .max-w-7xl,
+  .max-w-6xl,
+  .max-w-5xl,
+  .max-w-4xl {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  /* Fix padding and margins */
+  .px-4, .px-6, .px-8, .px-12 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .py-4, .py-6, .py-8, .py-12 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  /* Fix text sizes */
+  .text-4xl, .text-5xl, .text-6xl {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .text-2xl, .text-3xl {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .text-lg, .text-xl {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Fix spacing */
+  .space-y-4 > * + *,
+  .space-y-6 > * + *,
+  .space-y-8 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  /* Fix gaps */
+  .gap-4, .gap-6, .gap-8, .gap-12 {
+    gap: 1rem !important;
+  }
   /* Force single column layout on mobile */
   .grid {
     grid-template-columns: 1fr !important;
@@ -371,6 +448,31 @@ button:active {
 
 /* Landscape mobile */
 @media (max-width: 768px) and (orientation: landscape) {
+  /* Force mobile layout even in landscape */
+  .grid,
+  [class*="grid-cols"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .flex-row,
+  .sm\:flex-row,
+  .md\:flex-row,
+  .lg\:flex-row {
+    flex-direction: column !important;
+  }
+  
+  /* Adjust text sizes for landscape */
+  .text-4xl, .text-5xl, .text-6xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-2xl, .text-3xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-lg, .text-xl {
+    font-size: 0.9rem !important;
+  }
   .container {
     padding: 0.75rem;
   }

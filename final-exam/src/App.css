@@ -115,3 +115,65 @@
     font-size: 0.8rem;
   }
 }
+
+/* Ultra mobile responsive - Force mobile layout */
+@media (max-width: 640px) {
+  /* Force single column layout */
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Override all Tailwind grid classes */
+  .grid-cols-1,
+  .sm\:grid-cols-2,
+  .md\:grid-cols-2,
+  .lg\:grid-cols-2,
+  .lg\:grid-cols-3,
+  .lg\:grid-cols-4,
+  .lg\:grid-cols-12 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Force vertical layout */
+  .flex-row {
+    flex-direction: column !important;
+  }
+  
+  /* Adjust spacing */
+  .space-y-4 > * + *,
+  .space-y-6 > * + *,
+  .space-y-8 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  /* Fix padding issues */
+  .px-4, .px-6, .px-8 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .py-4, .py-6, .py-8 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  /* Fix max-width issues */
+  .max-w-7xl {
+    max-width: 100% !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  /* Fix text sizes */
+  .text-4xl, .text-5xl, .text-6xl {
+    font-size: 2rem !important;
+  }
+  
+  .text-2xl, .text-3xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .text-lg, .text-xl {
+    font-size: 1rem !important;
+  }
+}
