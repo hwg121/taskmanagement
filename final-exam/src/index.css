@@ -172,6 +172,43 @@ button:active {
 
 /* Mobile responsive improvements */
 @media (max-width: 480px) {
+  /* Force single column layout on mobile */
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Override all grid columns on mobile */
+  .grid-cols-1,
+  .sm\:grid-cols-2,
+  .md\:grid-cols-2,
+  .lg\:grid-cols-3,
+  .lg\:grid-cols-4,
+  .lg\:grid-cols-12 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Force vertical layout on mobile */
+  .flex-row {
+    flex-direction: column !important;
+  }
+  
+  /* Adjust spacing for mobile */
+  .space-y-4 > * + *,
+  .space-y-6 > * + *,
+  .space-y-8 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  /* Fix mobile padding */
+  .px-4, .px-6, .px-8 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .py-4, .py-6, .py-8 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
   /* Reduce padding and margins */
   .container {
     padding: 0.5rem;

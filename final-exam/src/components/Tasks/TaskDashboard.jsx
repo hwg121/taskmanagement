@@ -466,7 +466,7 @@ const TaskDashboard = ({ user, onLogout }) => {
                </button>
                <button
                  onClick={onLogout}
-                 className="px-6 py-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 hover:from-red-600 hover:via-pink-600 hover:to-purple-600 text-white rounded-2xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
+                 className="px-4 sm:px-6 py-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 hover:from-red-600 hover:via-pink-600 hover:to-purple-600 text-white rounded-2xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
                >
                  Đăng xuất
                </button>
@@ -489,7 +489,7 @@ const TaskDashboard = ({ user, onLogout }) => {
                    setError(null);
                    loadTasks();
                  }}
-                 className="px-6 py-2 bg-gradient-to-r from-red-500/20 to-red-600/20 hover:from-red-500/30 hover:to-red-600/30 text-red-200 rounded-xl font-medium transition-all duration-300 border border-red-500/30"
+                 className="px-4 sm:px-6 py-2 bg-gradient-to-r from-red-500/20 to-red-600/20 hover:from-red-500/30 hover:to-red-600/30 text-red-200 rounded-xl font-medium transition-all duration-300 border border-red-500/30"
                >
                  Thử lại
                </button>

@@ -384,7 +384,7 @@ const AdminDashboard = ({ user, onLogout }) => {
       
       {/* Header */}
       <header className="relative bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-2xl border-b border-white/20 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <div className="p-2 sm:p-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 rounded-xl sm:rounded-2xl shadow-lg">
@@ -524,7 +524,7 @@ const AdminDashboard = ({ user, onLogout }) => {
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setError(null)}
-                className="px-6 py-2 bg-gradient-to-r from-red-500/20 to-red-600/20 hover:from-red-500/30 hover:to-red-600/30 text-red-200 rounded-xl font-medium transition-all duration-300 border border-red-500/30"
+                className="px-4 sm:px-6 py-2 bg-gradient-to-r from-red-500/20 to-red-600/20 hover:from-red-500/30 hover:to-red-600/30 text-red-200 rounded-xl font-medium transition-all duration-300 border border-red-500/30"
               >
                 Đóng
               </button>

@@ -297,12 +297,12 @@ function App() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
           
           {/* Header */}
-          <div className="absolute top-8 left-8 right-8 flex items-center justify-between">
+          <div className="absolute top-4 sm:top-8 left-4 sm:left-8 right-4 sm:right-8 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
-                <CheckSquare className="w-7 h-7 text-white" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
+                <CheckSquare className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
               </div>
-              <span className="text-2xl font-bold text-white">TaskManager</span>
+              <span className="text-xl sm:text-2xl font-bold text-white">TaskManager</span>
             </div>
             <div className="flex items-center space-x-2 text-white/60">
               <Star className="w-5 h-5 text-yellow-400" />
@@ -310,7 +310,7 @@ function App() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center h-full pt-24 pb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center h-full pt-16 lg:pt-24 pb-8 lg:pb-16">
             
             {/* Left Side - Hero Content */}
             <div className="space-y-8">
@@ -320,22 +320,22 @@ function App() {
                   <span className="text-white/90 font-medium text-sm">Công cụ quản lý task #1</span>
                 </div>
                 
-                <h1 className="text-4xl lg:text-6xl font-bold text-white leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white leading-tight">
                   Quản lý
                   <span className="block bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
                     công việc
                   </span>
-                  <span className="block text-3xl lg:text-5xl text-white/90">thông minh</span>
+                  <span className="block text-2xl sm:text-3xl lg:text-5xl text-white/90">thông minh</span>
                 </h1>
                 
-                <p className="text-lg lg:text-xl text-white/80 leading-relaxed max-w-xl">
+                <p className="text-base sm:text-lg lg:text-xl text-white/80 leading-relaxed max-w-xl">
                   Tăng năng suất làm việc với công cụ quản lý task hiện đại, 
                   trực quan và dễ sử dụng.
                 </p>
               </div>
 
               {/* Features Grid - Compact */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="group bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl p-4 hover:bg-white/15 transition-all duration-300 hover:scale-105">
                   <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-emerald-500 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <CheckSquare className="w-5 h-5 text-white" />
@@ -370,7 +370,7 @@ function App() {
               </div>
 
               {/* Stats - Compact */}
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-3 gap-3 sm:gap-6">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white mb-1">10K+</div>
                   <div className="text-white/70 text-sm">Người dùng</div>
@@ -389,7 +389,7 @@ function App() {
             {/* Right Side - Login Form */}
             <div className="flex justify-center lg:justify-end">
               <div className="w-full max-w-md">
-                <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl p-8">
+                <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8">
                   
                   {/* View Toggle Tabs */}
                   <div className="flex mb-6 bg-white/5 backdrop-blur-xl rounded-xl p-1">
