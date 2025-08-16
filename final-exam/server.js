@@ -77,11 +77,10 @@ const ensureDbFiles = () => {
 
   const defaultActivities = [
     {
-      id: 1,
       username: "admin",
       action: "Khởi tạo hệ thống",
-      type: "system",
-      timestamp: new Date().toISOString()
+      type: "system"
+      // id and timestamp are removed to prevent React Error #31
     }
   ];
 

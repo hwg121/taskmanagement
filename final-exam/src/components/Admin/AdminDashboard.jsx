@@ -175,12 +175,12 @@ const AdminDashboard = ({ user, onLogout }) => {
           
           let status = 'offline';
           if (timeDiff !== null) {
-            if (timeDiff < 5) status = 'online';      // Online if logged in < 10 minutes ago
-            else if (timeDiff < 10) status = 'idle';   // Idle if logged in < 1 hour ago
+            if (timeDiff < 10) status = 'online';      // Online if logged in < 10 minutes ago
+            else if (timeDiff < 60) status = 'idle';   // Idle if logged in < 1 hour ago
             else status = 'offline';                   // Offline if > 1 hour ago
           }
           
-          console.log(`User ${user.username}: lastLogin=${user.lastLogin}, timeDiff=${timeDiff} minutes, status=${status}`);
+          console.log(`User ${user.username}: lastLogin=${user.lastLogin || 'N/A'}, timeDiff=${timeDiff !== null ? timeDiff.toFixed(2) : 'N/A'} minutes, status=${status}`);
           
           return {
             id: user.id,
