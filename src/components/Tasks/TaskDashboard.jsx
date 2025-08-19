@@ -71,6 +71,9 @@ const TaskDashboard = ({ user, onLogout }) => {
     confirmPassword: ''
   });
 
+  // Anti-spam state for form submission
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Update form when editing task
   useEffect(() => {
     if (editingTask) {
@@ -126,14 +129,23 @@ const TaskDashboard = ({ user, onLogout }) => {
   const handleCreateTask = async (e) => {
     e.preventDefault();
     
+    // Anti-spam: Prevent multiple submissions
+    if (isSubmitting) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
     // Validation: Check required fields
     if (!newTask.title.trim()) {
       setError('Tiêu đề task không được để trống.');
+      setIsSubmitting(false);
       return;
     }
     
     if (!newTask.description.trim()) {
       setError('Mô tả task không được để trống.');
+      setIsSubmitting(false);
       return;
     }
     
@@ -145,6 +157,7 @@ const TaskDashboard = ({ user, onLogout }) => {
       
       if (selectedDate < today) {
         setError('Ngày hết hạn phải từ hôm nay trở đi.');
+        setIsSubmitting(false);
         return;
       }
     }
@@ -154,6 +167,7 @@ const TaskDashboard = ({ user, onLogout }) => {
         // Update existing task - đảm bảo chỉ update task của user hiện tại
         if (editingTask.userId !== user.id) {
           setError('Bạn không có quyền chỉnh sửa task này.');
+          setIsSubmitting(false);
           return;
         }
 
@@ -166,6 +180,7 @@ const TaskDashboard = ({ user, onLogout }) => {
         } catch (serverError) {
           console.error('Error updating task:', serverError);
           setError(serverError.message || 'Không thể cập nhật task. Vui lòng thử lại.');
+          setIsSubmitting(false);
           return;
         }
 
@@ -180,6 +195,7 @@ const TaskDashboard = ({ user, onLogout }) => {
         } catch (serverError) {
           console.error('Error creating task:', serverError);
           setError(serverError.message || 'Không thể tạo task mới. Vui lòng thử lại.');
+          setIsSubmitting(false);
           return;
         }
       }
@@ -205,6 +221,8 @@ const TaskDashboard = ({ user, onLogout }) => {
     } catch (err) {
       console.error('Error creating/updating task:', err);
       setError(editingTask ? 'Không thể cập nhật task. Vui lòng thử lại.' : 'Không thể tạo task mới. Vui lòng thử lại.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -399,14 +417,23 @@ const TaskDashboard = ({ user, onLogout }) => {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     
+    // Anti-spam: Prevent multiple submissions
+    if (isSubmitting) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
     // Validate form
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       setError('Mật khẩu mới và xác nhận mật khẩu không khớp.');
+      setIsSubmitting(false);
       return;
     }
     
     if (passwordForm.newPassword.length < 6) {
       setError('Mật khẩu mới phải có ít nhất 6 ký tự.');
+      setIsSubmitting(false);
       return;
     }
 
@@ -431,6 +458,8 @@ const TaskDashboard = ({ user, onLogout }) => {
     } catch (err) {
       console.error('Error changing password:', err);
       setError(err.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -489,13 +518,19 @@ const TaskDashboard = ({ user, onLogout }) => {
                </div>
                <button
                  onClick={() => setShowChangePasswordModal(true)}
-                 className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl border border-white/20"
+                 disabled={isSubmitting}
+                 className={`px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl border border-white/20 ${
+                   isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                 }`}
                >
                  Đổi mật khẩu
                </button>
                <button
                  onClick={onLogout}
-                 className="px-4 sm:px-6 py-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 hover:from-red-600 hover:via-pink-600 hover:to-purple-600 text-white rounded-2xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
+                 disabled={isSubmitting}
+                 className={`px-4 sm:px-6 py-3 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 hover:from-red-600 hover:via-pink-600 hover:to-purple-600 text-white rounded-2xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20 ${
+                   isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                 }`}
                >
                  Đăng xuất
                </button>
@@ -621,10 +656,13 @@ const TaskDashboard = ({ user, onLogout }) => {
              <div className="mb-6 text-center">
                <button
                  onClick={() => setShowCreateModal(true)}
-                 className="px-8 py-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 text-white rounded-2xl font-semibold text-lg flex items-center justify-center mx-auto transition-all duration-300 shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 border border-white/20"
+                 disabled={isSubmitting}
+                 className={`px-8 py-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 text-white rounded-2xl font-semibold text-lg flex items-center justify-center mx-auto transition-all duration-300 shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 border border-white/20 ${
+                   isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                 }`}
                >
                  <Plus className="h-6 w-6 mr-3" />
-                 Tạo Task Mới
+                 {isSubmitting ? 'Đang xử lý...' : 'Tạo Task Mới'}
                </button>
              </div>
 
@@ -873,15 +911,21 @@ const TaskDashboard = ({ user, onLogout }) => {
                     setShowCreateModal(false);
                     setEditingTask(null);
                   }}
-                  className="px-6 py-3 bg-gradient-to-br from-white/15 to-white/10 hover:from-white/25 hover:to-white/15 text-white rounded-xl font-medium transition-all duration-300 border border-white/20"
+                  disabled={isSubmitting}
+                  className={`px-6 py-3 bg-gradient-to-br from-white/15 to-white/10 hover:from-white/25 hover:to-white/15 text-white rounded-xl font-medium transition-all duration-300 border border-white/20 ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="px-8 py-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20"
+                  disabled={isSubmitting}
+                  className={`px-8 py-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border border-white/20 ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
-                  {editingTask ? 'Cập nhật' : 'Tạo mới'}
+                  {isSubmitting ? 'Đang xử lý...' : (editingTask ? 'Cập nhật' : 'Tạo mới')}
                 </button>
               </div>
             </form>
@@ -973,15 +1017,21 @@ const TaskDashboard = ({ user, onLogout }) => {
                 <button
                   type="button"
                   onClick={() => setShowChangePasswordModal(false)}
-                  className="flex-1 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-300"
+                  disabled={isSubmitting}
+                  className={`flex-1 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-300 ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-lg font-medium transition-all duration-300"
+                  disabled={isSubmitting}
+                  className={`flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-lg font-medium transition-all duration-300 ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
-                  Đổi mật khẩu
+                  {isSubmitting ? 'Đang xử lý...' : 'Đổi mật khẩu'}
                 </button>
               </div>
             </form>
